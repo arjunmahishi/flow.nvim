@@ -1,16 +1,9 @@
-local lng = require('run-code.language')
+local exe = require('run-code.execute')
 
 function run()
-  -- TODO:
-  --    [DONE] assert if the file is md
-  --    [DONE] get text from current buffer
-  --    [DONE] parse the file to get all the code blocks
-  --    [DONE] select the current code block
-  --    - execute block and print the output
-
   -- currently only markdown files are supported
   if vim.bo.filetype ~= "markdown" then
-    print("This is currently only supported in markdown")
+    print("run-code is currently only supported in markdown")
     return
   end
 
@@ -22,7 +15,8 @@ function run()
     print("You are not on any code block")
     return
   end
-  print(vim.inspect(block))
+
+  exe.execute_block(block)
 end
 
 -- returns a table containing { {block}, start_line, end_line }
@@ -37,20 +31,23 @@ function code_blocks_in_lines(lines)
   local block_started = false
   local start_line = -1
   local curr_block = {}
+  local lang = ""
   for k, v in pairs(lines) do
     v0 = v:gsub("%s+", "") -- remove whitespaces
     if v0:sub(0, 3) == '```' then
       if not block_started then -- handle opening backticks
         block_started = true 
         start_line = k + 1
+        lang = v0:sub(4):gsub("%s+.*", "")
       else -- handle closing backticks
-        text = table.concat(curr_block, "\n")
-        blocks[#blocks + 1] = { text = text, start_line = start_line, end_line = k - 1 }
+        code = table.concat(curr_block, "\n")
+        blocks[#blocks + 1] = { code = code, start_line = start_line, end_line = k - 1, lang = lang }
 
         -- house keeping
         block_started = false
         curr_block = {}
         start_line = -1
+        lang = ""
       end
     else -- handle regular line
       if block_started then
