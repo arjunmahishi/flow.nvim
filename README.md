@@ -1,3 +1,3 @@
-# run-scheme
+# run-code
 
-A simple plugin to run scheme code and print the output in a scratch buffer
+A simple plugin to run code blocks present in markdown files
