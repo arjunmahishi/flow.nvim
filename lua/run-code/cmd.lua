@@ -8,13 +8,13 @@ lang_cmd_map = {
   scheme = "scheme <<-EOF\n%s\nEOF" --TODO: try to clean up the output
 }
 
-function cmd(block)
-  local cmd_tmpl = lang_cmd_map[block.lang]
+function cmd(lang, code)
+  local cmd_tmpl = lang_cmd_map[lang]
   if cmd_tmpl == nil then
     return ""
   end
 
-  return string.format(cmd_tmpl, block.code)
+  return string.format(cmd_tmpl, code)
 end
 
 return {

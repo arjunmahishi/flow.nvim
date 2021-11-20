@@ -1,7 +1,7 @@
 local cmd = require("run-code.cmd").cmd
 
-function execute_block(block)
-  local c = cmd(block)
+function execute(lang, code)
+  local c = cmd(lang, code)
   if c == "" then
     print(string.format("this language doesn't seem to be supported yet"))
     return
@@ -27,5 +27,5 @@ function run_and_print(cmd)
 end
 
 return {
-  execute_block = execute_block
+  execute = execute
 }

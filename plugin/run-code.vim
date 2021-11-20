@@ -3,11 +3,9 @@ if exists('g:loaded_run_code') | finish | endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-command! RunCode lua require'run-code'.run()
+command! RunCodeBlock lua require'run-code'.run_block()
 command! ReloadRunCode lua require'run-code'.reload_plugin()
-
-" this is only for debugging
-au filetype markdown nmap <leader>r :RunCode<CR>
+command! -nargs=* -range RunCodeSelected call luaeval("require('run-code').run_range(_A)", [<line1>, <line2>, <count>, <f-args>])
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

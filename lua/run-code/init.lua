@@ -2,14 +2,25 @@ local exe = require('run-code.execute')
 local extract = require('run-code.extract')
 local md = require('run-code.markdown')
 
-function run()
-  -- currently only markdown files are supported
+function run_block()
+  local lines = extract.lines_from_current_buffer()
+
   if vim.bo.filetype ~= "markdown" then
-    print("run-code is currently only supported in markdown")
+    print("Sorry! currently RunCodeBlock is only supported in markdown")
     return
   end
 
-  local lines = extract.lines_from_current_buffer()
+  handle_md_file(lines)
+end
+
+function run_range(range)
+  local lines = extract.lines_in_range(range)
+  local code = table.concat(lines, "\n")
+
+  exe.execute(vim.bo.filetype, code)
+end
+
+function handle_md_file(lines)
   local blocks = md.code_blocks_in_lines(lines)
   local block = md.select_block(blocks)
 
@@ -18,7 +29,7 @@ function run()
     return
   end
 
-  exe.execute_block(block)
+  exe.execute(block.lang, block.code)
 end
 
 function reload_plugin()
@@ -35,6 +46,7 @@ function str_split(s, delimiter)
 end
 
 return {
-  run = run,
+  run_block = run_block,
+  run_range = run_range,
   reload_plugin = reload_plugin
 }
