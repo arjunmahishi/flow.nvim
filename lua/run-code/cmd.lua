@@ -1,4 +1,4 @@
--- TODO: do a check to see if these commands are available
+-- TODO: validate if these commands are available
 lang_cmd_map = {
   lua = "lua <<-EOF\n%s\nEOF",
   -- python = "python3 <<-EOF\n%s\nEOF",

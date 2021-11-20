@@ -1,4 +1,6 @@
 local exe = require('run-code.execute')
+local extract = require('run-code.extract')
+local md = require('run-code.markdown')
 
 function run()
   -- currently only markdown files are supported
@@ -7,9 +9,9 @@ function run()
     return
   end
 
-  local lines = lines_from_current_buffer()
-  local blocks = code_blocks_in_lines(lines)
-  local block = select_block(blocks)
+  local lines = extract.lines_from_current_buffer()
+  local blocks = md.code_blocks_in_lines(lines)
+  local block = md.select_block(blocks)
 
   if block == nil then
     print("You are not on any code block")
@@ -17,68 +19,6 @@ function run()
   end
 
   exe.execute_block(block)
-end
-
--- returns a table containing { {block}, start_line, end_line }
--- where each block is a string containing the snippet of code 
--- contained in the block
---
--- ASSUMPTION: the block will start and end with 3 backticks in a line with nothing else
--- TODO: handle edge cases like inline blocks etc
-function code_blocks_in_lines(lines)
-  local blocks = {}
-
-  local block_started = false
-  local start_line = -1
-  local curr_block = {}
-  local lang = ""
-  for k, v in pairs(lines) do
-    v0 = v:gsub("%s+", "") -- remove whitespaces
-    if v0:sub(0, 3) == '```' then
-      if not block_started then -- handle opening backticks
-        block_started = true 
-        start_line = k + 1
-        lang = v0:sub(4):gsub("%s+.*", "")
-      else -- handle closing backticks
-        code = table.concat(curr_block, "\n")
-        blocks[#blocks + 1] = { code = code, start_line = start_line, end_line = k - 1, lang = lang }
-
-        -- house keeping
-        block_started = false
-        curr_block = {}
-        start_line = -1
-        lang = ""
-      end
-    else -- handle regular line
-      if block_started then
-        curr_block[#curr_block + 1] = v
-      end
-    end
-  end
-
-  return blocks
-end
-
--- return the selected block based on the cursor location
-function select_block(blocks)
-  local curr_win = vim.api.nvim_get_current_win()
-  local curr_line = vim.api.nvim_win_get_cursor(curr_win)[1]
-
-  for _, block in pairs(blocks) do
-    if curr_line >= block.start_line - 1 and curr_line <= block.end_line + 1 then
-      return block
-    end
-  end
-
-  return nil
-end
-
--- returns a table containing every line in the file
-function lines_from_current_buffer()
-  local curr_buff = vim.api.nvim_get_current_buf()
-  local line_count = vim.api.nvim_buf_line_count(curr_buff)
-
-  return vim.api.nvim_buf_get_lines(curr_buff, 0, line_count, false)
 end
 
 function reload_plugin()
