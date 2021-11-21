@@ -1,6 +1,6 @@
 # run-code
 
-A simple plugin to quickly run a snippet of code without ever leaving the nvim. This is especially useful when you are writing/debugging a script.
+A simple plugin to quickly run a snippet of code without ever leaving the nvim. This is especially useful when you are writing/debugging scripts
 
 ## Installation
 
@@ -23,6 +23,8 @@ This is still a work in progress. There are still a couple of bugs that make it 
 ##### Some useful key bindings
 
 ```lua
+-- paste this in your init.lua
+
 vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r', ':RunCodeFile<CR>', {})
 vim.cmd [[
@@ -33,6 +35,8 @@ vim.cmd [[
 OR (in vim script)
 
 ```vim
+" paste this in your init.vim
+
 vmap <leader>r :RunCodeSelected<CR>
 nmap <leader>r :RunCodeFile<CR>
 au filetype markdown nmap <leader>R :RunCodeBlock<CR>
