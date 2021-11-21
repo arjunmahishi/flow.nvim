@@ -1,6 +1,6 @@
 # run-code
 
-A simple plugin to quickly run a snippet of code without ever leaving the nvim. This is especially useful when you are writing/debugging scripts
+A simple plugin to quickly run a snippet of code without ever leaving neovim. This is especially useful when you are writing/debugging scripts
 
 ## Installation
 
@@ -41,3 +41,7 @@ vmap <leader>r :RunCodeSelected<CR>
 nmap <leader>r :RunCodeFile<CR>
 au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ```
+
+---
+
+If you have any questions about how to use the plugin or need help understanding the code, feel free to [get in touch on twitter](https://twitter.com/messages/131552332-131552332?text=Hey)
