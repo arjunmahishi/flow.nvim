@@ -3,7 +3,7 @@ local cmd = require("run-code.cmd").cmd
 function execute(lang, code)
   local c = cmd(lang, code)
   if c == "" then
-    print(string.format("this language doesn't seem to be supported yet"))
+    print(string.format("run-code: the language '%s' doesn't seem to be supported yet", lang))
     return
   end
 

@@ -6,7 +6,7 @@ function run_block()
   local lines = extract.lines_from_current_buffer()
 
   if vim.bo.filetype ~= "markdown" then
-    print("Sorry! currently RunCodeBlock is only supported in markdown")
+    print("run-code: sorry! currently RunCodeBlock is only supported in markdown")
     return
   end
 
@@ -32,7 +32,7 @@ function handle_md_file(lines)
   local block = md.select_block(blocks)
 
   if block == nil then
-    print("You are not on any code block")
+    print("run-code: you are not on any code block")
     return
   end
 
