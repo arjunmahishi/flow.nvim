@@ -1,14 +1,6 @@
 # run-code
 
-A simple plugin to run code from within nvim without ever leaving the editor
-
-## WIP
-
-This is still a work in progress. There are still a couple of bugs that make it slightly unusable. So, PRs are welcome and appreciated. As of now, this plugin can do the following things
-
-- Run code that is visually selected (`:RunCodeSelected`)
-- Run the entire file (`:RunCodeFile`)
-- Run a code snippet present in markdown (hover over the snippet you want to run and `:RunCodeBlock`)
+A simple plugin to quickly run a snippet of code without ever leaving the nvim. This is especially useful when you are writing/debugging a script.
 
 ## Installation
 
@@ -20,9 +12,28 @@ Plug 'arjunmahishi/run-code.nvim'
 
 ## Usage
 
-Place the cursor over a code block in a markdown file and run the command `:RunCode`
+This is still a work in progress. There are still a couple of bugs that make it slightly unusable. So, PRs are welcome and appreciated. As of now, this plugin can do the following things
 
-You could alternatively add a key mapping to do that same
+| Command | Description |
+|---------|-------------|
+| `:RunCodeSelected` | Run code that is visually selected |
+| `:RunCodeFile` | Run the entire file |
+| `:RunCodeBlock` | Run a code snippet present in markdown (place the cursor within the snippet and run the command) |
+
+##### Some useful key bindings
+
+```lua
+vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r', ':RunCodeFile<CR>', {})
+vim.cmd [[
+  au filetype markdown nmap <leader>R :RunCodeBlock<CR>
+]]
+```
+
+OR (in vim script)
+
 ```vim
-au filetype markdown nmap <leader>r :RunCode<CR>
+vmap <leader>r :RunCodeSelected<CR>
+nmap <leader>r :RunCodeFile<CR>
+au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ```
