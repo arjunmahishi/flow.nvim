@@ -20,6 +20,13 @@ function run_range(range)
   exe.execute(vim.bo.filetype, code)
 end
 
+function run_file()
+  local lines = extract.lines_from_current_buffer()
+  local code = table.concat(lines, "\n")
+
+  exe.execute(vim.bo.filetype, code)
+end
+
 function handle_md_file(lines)
   local blocks = md.code_blocks_in_lines(lines)
   local block = md.select_block(blocks)
@@ -37,16 +44,9 @@ function reload_plugin()
   print "reloaded run-code"
 end
 
-function str_split(s, delimiter)
-  local result = {}
-  for match in (s..delimiter):gmatch("(.-)"..delimiter) do
-    table.insert(result, match);
-  end
-  return result
-end
-
 return {
   run_block = run_block,
   run_range = run_range,
+  run_file = run_file,
   reload_plugin = reload_plugin
 }
