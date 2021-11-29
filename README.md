@@ -21,7 +21,7 @@ Plug 'arjunmahishi/run-code.nvim'
 
 ## Usage
 
-This is still a work in progress. There are still a couple of bugs that make it slightly unusable. So, PRs are welcome and appreciated. As of now, this plugin can do the following things
+This is still a work in progress. So, PRs are welcome and appreciated. As of now, this plugin can do the following things
 
 | Command | Description |
 |---------|-------------|
