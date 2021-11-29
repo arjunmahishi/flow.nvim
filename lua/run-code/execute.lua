@@ -1,7 +1,8 @@
 local cmd = require("run-code.cmd").cmd
+local output_file = "/tmp/_run_code.out"
 
 function execute(lang, code)
-  local c = cmd(lang, code)
+  local c = cmd(lang, code, output_file)
   if c == "" then
     print(string.format("run-code: the language '%s' doesn't seem to be supported yet", lang))
     return
@@ -10,20 +11,35 @@ function execute(lang, code)
   run_and_print(c)
 end
 
--- this is not safe!!
--- craps out when the code is an interactive process
--- will live with it for now
-function run_and_print(cmd)
--- TODO:
---    - handle errors
---    - timeout commands if they are taking too long
-  local result = ""
-  local handle = io.popen(cmd)
-  result = handle:read("*a")
-  handle:flush()
-  handle:close()
+-- helper functions to execute a command and print its output
 
-  print(result)
+function file_exists(file)
+  local f = io.open(file, "rb")
+  if f then f:close() end
+  return f ~= nil
+end
+
+function read_file(file)
+  if not file_exists(file) then return {} end
+
+  local lines = {}
+  for line in io.lines(file) do
+    lines[#lines + 1] = line
+  end
+
+  return lines
+end
+
+-- run and print the output by reading the file the output was piped to.
+-- the error need not explictly be handled since it is already being piped
+-- to the same output file
+function run_and_print(cmd)
+  os.execute(cmd)
+
+  local lines = read_file(output_file)
+  for k, v in pairs(lines) do
+    print(v)
+  end
 end
 
 return {
