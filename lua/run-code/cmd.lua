@@ -5,7 +5,8 @@ lang_cmd_map = {
   ruby = "ruby <<-EOF\n%s\nEOF",
   bash = "bash <<-EOF\n%s\nEOF",
   sh = "sh <<-EOF\n%s\nEOF",
-  scheme = "scheme <<-EOF\n%s\nEOF" --TODO: try to clean up the output
+  scheme = "scheme <<-EOF\n%s\nEOF", --TODO: try to clean up the output
+  javascript = "node <<-EOF\n%s\nEOF"
 }
 
 -- constructs a command in the following format:
