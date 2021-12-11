@@ -1,5 +1,5 @@
 -- TODO: validate if these commands are available
-lang_cmd_map = {
+local lang_cmd_map = {
   lua = "lua <<-EOF\n%s\nEOF",
   python = "python <<-EOF\n%s\nEOF",
   ruby = "ruby <<-EOF\n%s\nEOF",
@@ -15,7 +15,7 @@ lang_cmd_map = {
 --    <code>
 -- EOF
 --
-function cmd(lang, code, output_file)
+local function cmd(lang, code)
   local cmd_tmpl = lang_cmd_map[lang]
   if cmd_tmpl == nil then
     return ""
