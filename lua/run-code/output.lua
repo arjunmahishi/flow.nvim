@@ -1,3 +1,14 @@
+-- this file controls how the output is displayed. Currently, there are two ways to display the output:
+-- 1. In STDOUT (default)
+-- 2. In a seperate buffer
+--
+-- Printing on STDOUT is simple calling the lua print function. Where as printing in a seperate buffer can be
+-- more configurable
+
+local output_buffer_filetype = "run-code-output"
+local output_win = nil
+local output_buf = nil
+
 local function str_split(s, delimiter)
   local result = {}
   for match in (s..delimiter):gmatch("(.-)"..delimiter) do
@@ -6,27 +17,44 @@ local function str_split(s, delimiter)
   return result
 end
 
-local function write_to_buffer(output)
-  vim.cmd "vsplit"
-  local win = vim.api.nvim_get_current_win()
-  local buf = vim.api.nvim_create_buf(true, true)
+-- TODO: make the output buffer read only
+local function write_to_buffer(output, buffer_settings)
+  local current_working_window = vim.api.nvim_get_current_win()
 
-  vim.api.nvim_win_set_buf(win, buf)
+  -- spawn a new window an buffer is this is the first run
+  if output_win == nil then
+    vim.cmd "vsplit"
+    output_win = vim.api.nvim_get_current_win()
+    output_buf = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_win_set_buf(output_win, output_buf)
+  end
 
-  vim.opt.modifiable = true
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, str_split(output, "\n"))
-  vim.opt.modifiable = false
+  -- switch to the output window and write the output to the buffer
+  vim.api.nvim_set_current_win(output_win)
+  vim.api.nvim_buf_set_lines(output_buf, 0, -1, false, str_split(output, "\n"))
 
+  -- apply buffer settings
+  vim.bo.filetype = output_buffer_filetype
+
+  vim.api.nvim_set_current_win(current_working_window)
 end
 
-local function plane_print(output)
+-- this is meant to be called when the output window/buffer is closed
+local function reset_output_win()
+  output_win = nil
+  output_buf = nil
+end
+
+local function plain_print(output)
   print(output)
 end
 
 local function handle_output(output)
   write_to_buffer(output)
+  -- plain_print(output)
 end
 
 return {
   handle_output = handle_output,
+  reset_output_win = reset_output_win,
 }
