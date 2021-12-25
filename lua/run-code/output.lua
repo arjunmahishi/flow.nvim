@@ -5,25 +5,27 @@
 -- Printing on STDOUT is simple calling the lua print function. Where as printing in a seperate buffer can be
 -- more configurable
 
-local output_buffer_filetype = "run-code-output"
+local output_buffer_filetype = 'run-code-output'
 local output_win = nil
 local output_buf = nil
 
+local default_split_cmd = 'vsplit'
+
 local function str_split(s, delimiter)
   local result = {}
-  for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+  for match in (s..delimiter):gmatch('(.-)'..delimiter) do
     table.insert(result, match);
   end
   return result
 end
 
 -- TODO: make the output buffer read only
-local function write_to_buffer(output, buffer_settings)
+local function write_to_buffer(output, options)
   local current_working_window = vim.api.nvim_get_current_win()
 
   -- spawn a new window an buffer is this is the first run
   if output_win == nil then
-    vim.cmd "vsplit"
+    vim.cmd(options.split_cmd or default_split_cmd)
     output_win = vim.api.nvim_get_current_win()
     output_buf = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(output_win, output_buf)
@@ -31,7 +33,7 @@ local function write_to_buffer(output, buffer_settings)
 
   -- switch to the output window and write the output to the buffer
   vim.api.nvim_set_current_win(output_win)
-  vim.api.nvim_buf_set_lines(output_buf, 0, -1, false, str_split(output, "\n"))
+  vim.api.nvim_buf_set_lines(output_buf, 0, -1, false, str_split(output, '\n'))
 
   -- apply buffer settings
   vim.bo.filetype = output_buffer_filetype
@@ -49,9 +51,15 @@ local function plain_print(output)
   print(output)
 end
 
-local function handle_output(output)
-  write_to_buffer(output)
-  -- plain_print(output)
+-- handle_output is the main entry function that orchestrates the
+-- the method of output
+local function handle_output(output, options)
+  if options.buffer then
+    write_to_buffer(output, options)
+    return
+  end
+
+  plain_print(output)
 end
 
 return {
