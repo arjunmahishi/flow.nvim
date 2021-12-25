@@ -42,6 +42,24 @@ nmap <leader>r :RunCodeFile<CR>
 au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ```
 
+## Configuration
+
+```lua
+require('run-code').setup {
+  output = {
+    buffer = true,
+    split_cmd = '20split',
+  }
+}
+```
+
+#### Output options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `buffer` | `false` | Whether to print the output in a buffer or not. By default the output is printed in the command window. If this option is set to `true`, the output will be shown in a seperate buffer |
+| `split_cmd` | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
+
 ## Demo
 
 #### Running the whole file / Run selective snippets
