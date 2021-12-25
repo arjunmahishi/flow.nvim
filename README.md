@@ -9,15 +9,6 @@ Use you faviorite plugin manager. If you use vim-plug, add this to your `init.vi
 ```vim
 Plug 'arjunmahishi/run-code.nvim'
 ```
-## Demo
-
-#### Running the whole file / Run selective snippets
-
-![run-code-1](https://user-images.githubusercontent.com/11977524/143928407-5b440a4f-fd7b-440c-940a-088ac1006a85.gif)
-
-#### Running code snippets within a markdown file
-
-![run-code-2](https://user-images.githubusercontent.com/11977524/143929192-3c43f4c6-a3bc-4775-b561-c1d78bc8925b.gif)
 
 ## Usage
 
@@ -50,6 +41,34 @@ vmap <leader>r :RunCodeSelected<CR>
 nmap <leader>r :RunCodeFile<CR>
 au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ```
+
+## Configuration
+
+```lua
+require('run-code').setup {
+  output = {
+    buffer = true,
+    split_cmd = '20split',
+  }
+}
+```
+
+#### Output options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `buffer` | `false` | Whether to print the output in a buffer or not. By default the output is printed in the command window. If this option is set to `true`, the output will be shown in a seperate buffer |
+| `split_cmd` | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
+
+## Demo
+
+#### Running the whole file / Run selective snippets
+
+![run-code-1](https://user-images.githubusercontent.com/11977524/143928407-5b440a4f-fd7b-440c-940a-088ac1006a85.gif)
+
+#### Running code snippets within a markdown file
+
+![run-code-2](https://user-images.githubusercontent.com/11977524/143929192-3c43f4c6-a3bc-4775-b561-c1d78bc8925b.gif)
 
 ---
 

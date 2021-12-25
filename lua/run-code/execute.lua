@@ -1,14 +1,15 @@
 local cmd = require("run-code.cmd").cmd
-local output_file = "/tmp/_run_code.out"
+local output = require("run-code.output")
 
-function execute(lang, code)
-  local c = cmd(lang, code, output_file)
+local function execute(lang, code, options)
+  local c = cmd(lang, code)
   if c == "" then
     print(string.format("run-code: the language '%s' doesn't seem to be supported yet", lang))
     return
   end
 
-  print(vim.fn.system(c))
+  local out = vim.fn.system(c)
+  output.handle_output(out, options.output)
 end
 
 return {
