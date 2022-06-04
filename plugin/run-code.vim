@@ -5,11 +5,15 @@ set cpo&vim
 
 command! RunCodeBlock lua require('run-code').run_block()
 command! RunCodeFile lua require('run-code').run_file()
+command! RunCodeSetCmd lua require('run-code.cmd').set_custom_cmd()
 command! ReloadRunCode lua require('run-code').reload_plugin()
 command! -nargs=* -range RunCodeSelected call luaeval("require('run-code').run_range(_A)", [<line1>, <line2>, <count>, <f-args>])
 
 " trigger reset of output when the output buffer is manually closed
 autocmd FileType run-code-output autocmd BufDelete <buffer> lua require('run-code.output').reset_output_win()
+
+" close the custom command window on save
+autocmd FileType run-code-custom-command autocmd BufWritePost <buffer> lua require('run-code.cmd').close_custom_cmd_win()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

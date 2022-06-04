@@ -1,7 +1,21 @@
-local exe = require('run-code.execute')
 local extract = require('run-code.extract')
 local md = require('run-code.markdown')
+local cmd = require("run-code.cmd").cmd
+local output = require("run-code.output")
 local setup_options = {}
+
+local function run(filetype, code)
+  local c = cmd(filetype, code, setup_options)
+  if c == "" then
+    print(string.format(
+      "run-code: the language '%s' doesn't seem to be supported yet", filetype
+    ))
+    return
+  end
+
+  local out = vim.fn.system(c)
+  output.handle_output(out, setup_options.output)
+end
 
 local function handle_md_file(lines)
   local blocks = md.code_blocks_in_lines(lines)
@@ -12,7 +26,7 @@ local function handle_md_file(lines)
     return
   end
 
-  exe.execute(block.lang, block.code, setup_options)
+  run(block.lang, block.code)
 end
 
 local function run_block()
@@ -30,14 +44,14 @@ local function run_range(range)
   local lines = extract.lines_in_range(range)
   local code = table.concat(lines, "\n")
 
-  exe.execute(vim.bo.filetype, code, setup_options)
+  run(vim.bo.filetype, code)
 end
 
 local function run_file()
   local lines = extract.lines_from_current_buffer()
   local code = table.concat(lines, "\n")
 
-  exe.execute(vim.bo.filetype, code, setup_options)
+  run(vim.bo.filetype, code)
 end
 
 local function reload_plugin()

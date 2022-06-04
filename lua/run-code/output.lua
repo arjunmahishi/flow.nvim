@@ -1,9 +1,10 @@
--- this file controls how the output is displayed. Currently, there are two ways to display the output:
+-- this file controls how the output is displayed. Currently, there are two
+-- ways to display the output:
 -- 1. In STDOUT (default)
--- 2. In a seperate buffer
+-- 2. In a separate buffer
 --
--- Printing on STDOUT is simple calling the lua print function. Where as printing in a seperate buffer can be
--- more configurable
+-- Printing on STDOUT is simple calling the lua print function. Where as
+-- printing in a separate buffer can be more configurable
 
 local output_buffer_filetype = 'run-code-output'
 local output_win = nil
@@ -23,7 +24,7 @@ end
 local function write_to_buffer(output, options)
   local current_working_window = vim.api.nvim_get_current_win()
 
-  -- spawn a new window an buffer is this is the first run
+  -- spawn a new window an buffer if this is the first run
   if output_win == nil then
     vim.cmd(options.split_cmd or default_split_cmd)
     output_win = vim.api.nvim_get_current_win()
