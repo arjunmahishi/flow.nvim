@@ -28,6 +28,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 
 vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r', ':RunCodeFile<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R', ':RunCodeSetCmd<CR>', {})
 vim.cmd [[
   au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ]]
@@ -40,6 +41,7 @@ OR (in vim script)
 
 vmap <leader>r :RunCodeSelected<CR>
 nmap <leader>r :RunCodeFile<CR>
+nmap <leader>R :RunCodeSetCmd<CR>
 au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ```
 
