@@ -13,7 +13,7 @@ command! -nargs=* -range RunCodeSelected call luaeval("require('run-code').run_r
 autocmd FileType run-code-output autocmd BufDelete <buffer> lua require('run-code.output').reset_output_win()
 
 " close the custom command window on save
-autocmd FileType run-code-custom-command autocmd BufWritePost <buffer> lua require('run-code.cmd').close_custom_cmd_win()
+autocmd BufWritePost,BufLeave *run_code_custom_cmd lua require('run-code.cmd').close_custom_cmd_win()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

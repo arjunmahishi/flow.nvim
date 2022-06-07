@@ -1,11 +1,10 @@
 local DATA_DIR = vim.fn.stdpath("data")
 local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd"
 
-local custom_command_filetype = 'run-code-custom-command'
+local custom_command_filetype = 'bash'
 local custom_command_default_split = '10split'
 local custom_command_win = nil
 local custom_command_buf = nil
-
 
 -- TODO: validate if these commands are available
 local lang_cmd_map = {
