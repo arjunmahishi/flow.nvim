@@ -2,7 +2,13 @@ local extract = require('run-code.extract')
 local md = require('run-code.markdown')
 local cmd = require("run-code.cmd").cmd
 local output = require("run-code.output")
-local setup_options = {}
+local default_setup_options = {
+  output = {
+    buffer = false
+  }
+}
+
+local setup_options = default_setup_options
 
 local function run(filetype, code)
   local c = cmd(filetype, code, setup_options)
