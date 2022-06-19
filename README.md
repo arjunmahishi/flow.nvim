@@ -29,9 +29,6 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r', ':RunCodeFile<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>R', ':RunCodeSetCmd<CR>', {})
-vim.cmd [[
-  au filetype markdown nmap <leader>R :RunCodeBlock<CR>
-]]
 ```
 
 OR (in vim script)
@@ -42,7 +39,6 @@ OR (in vim script)
 vmap <leader>r :RunCodeSelected<CR>
 nmap <leader>r :RunCodeFile<CR>
 nmap <leader>R :RunCodeSetCmd<CR>
-au filetype markdown nmap <leader>R :RunCodeBlock<CR>
 ```
 
 ## Configuration
@@ -55,6 +51,17 @@ require('run-code').setup {
   },
   enable_custom_commands = false
 }
+
+-- optional custom variables
+require('run-code.vars').add_vars({
+  str = "test-val-2",
+  num = 3,
+  bool = true,
+  var_with_func = function()
+    -- the value of this var is computed by running this function at runtime
+    return "test-val"
+  end
+})
 ```
 
 | Attributes | Default | Description |

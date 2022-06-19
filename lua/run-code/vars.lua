@@ -25,6 +25,23 @@ local function vars_to_export()
   return vars
 end
 
+local function add_vars(vars)
+  for name, val in pairs(vars) do
+    local val_type = type(val)
+
+    if val_type == "function" then
+      cmd_variables[name] = val
+    else
+      local func = function()
+        return val
+      end
+
+      cmd_variables[name] = func
+    end
+  end
+end
+
 return {
-  vars_to_export = vars_to_export
+  vars_to_export = vars_to_export,
+  add_vars = add_vars
 }
