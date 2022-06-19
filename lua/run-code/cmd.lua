@@ -1,3 +1,5 @@
+local vars = require('run-code.vars')
+
 local DATA_DIR = vim.fn.stdpath("data")
 local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd"
 
@@ -68,13 +70,14 @@ local function get_default_cmd(lang, code)
 end
 
 local function cmd(lang, code, options)
-  -- if custom commands are enabled and set, run that. Else, fallback to the
-  -- default commands
+  local cmd_str = get_default_cmd(lang, code)
+
+  -- if custom commands are enabled and set, run that
   if options.enable_custom_commands then
-    return get_custom_cmd()
+    cmd_str = get_custom_cmd()
   end
 
-  return get_default_cmd(lang, code)
+  return vars.vars_to_export() .. "; " .. cmd_str
 end
 
 return {
