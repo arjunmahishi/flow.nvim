@@ -1,41 +1,34 @@
 local vars = require('run-code.vars')
 
 local DATA_DIR = vim.fn.stdpath("data")
-local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd"
+local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
 
 local custom_command_filetype = 'bash'
 local custom_command_default_split = '10split'
 local custom_command_win = nil
 local custom_command_buf = nil
 
--- TODO: validate if these commands are available
 local lang_cmd_map = {
   lua = "lua <<-EOF\n%s\nEOF",
   python = "python <<-EOF\n%s\nEOF",
   ruby = "ruby <<-EOF\n%s\nEOF",
   bash = "bash <<-EOF\n%s\nEOF",
   sh = "sh <<-EOF\n%s\nEOF",
-  scheme = "scheme <<-EOF\n%s\nEOF", --TODO: try to clean up the output
+  scheme = "scheme <<-EOF\n%s\nEOF",
   javascript = "node <<-EOF\n%s\nEOF",
   go = "go run ."
 }
 
-local function get_custom_cmd()
-  local custom_cmd_file = io.open(CUSTOM_CMD_FILE, "r")
-  local custom_cmd = ""
-
-  if custom_cmd_file ~= nil then
-    custom_cmd = custom_cmd_file:read("a")
-    io.close(custom_cmd_file)
-  end
-
-  return custom_cmd
-end
-
 -- set_custom_cmd opens a small buffer that allows the user to edit the custom
 -- command
-local function set_custom_cmd()
-  vim.cmd(custom_command_default_split .. ' ' .. CUSTOM_CMD_FILE)
+local function set_custom_cmd(suffix)
+  if suffix == nil then
+    print("you need to provide an alias for the custom command (example: :RunCodeSetCustomCmd 1)")
+    return
+  end
+
+  local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  vim.cmd(custom_command_default_split .. ' ' .. file_name)
   custom_command_win = vim.api.nvim_get_current_win()
   custom_command_buf = vim.api.nvim_get_current_buf()
   vim.bo.filetype = custom_command_filetype
@@ -60,7 +53,7 @@ end
 --    <code>
 -- EOF
 --
-local function get_default_cmd(lang, code)
+local function cmd(lang, code)
   local cmd_tmpl = lang_cmd_map[lang]
   if cmd_tmpl == nil then
     return ""
@@ -69,12 +62,14 @@ local function get_default_cmd(lang, code)
   return string.format(cmd_tmpl, code)
 end
 
-local function cmd(lang, code, options)
-  local cmd_str = get_default_cmd(lang, code)
+local function custom_cmd(suffix)
+  local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  local custom_cmd_file = io.open(file_name, "r")
+  local cmd_str = ""
 
-  -- if custom commands are enabled and set, run that
-  if options.enable_custom_commands then
-    cmd_str = get_custom_cmd()
+  if custom_cmd_file ~= nil then
+    cmd_str = custom_cmd_file:read("a")
+    io.close(custom_cmd_file)
   end
 
   return vars.vars_to_export() .. "; " .. cmd_str
@@ -82,6 +77,7 @@ end
 
 return {
   cmd = cmd,
+  custom_cmd = custom_cmd,
   set_custom_cmd = set_custom_cmd,
   close_custom_cmd_win = close_custom_cmd_win
 }

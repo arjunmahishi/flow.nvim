@@ -19,7 +19,8 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:RunCodeSelected` | Run code that is visually selected |
 | `:RunCodeFile` | Run the entire file |
 | `:RunCodeBlock` | Run a code snippet present in markdown (place the cursor within the snippet and run the command) |
-| `:RunCodeSetCmd` | Set a custom command to use with `:RunCodeFile`. This custom command would be used instead of the default run command used for a specific language |
+| `:RunCodeSetCustomCmd <alias>` | Set a custom commands to use with `:RunCodeCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
+| `:RunCodeCustomCmd <alias>` | Run the custom command stored at the given alias |
 
 ##### Some useful key bindings
 
@@ -27,8 +28,17 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 -- paste this in your init.lua
 
 vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r', ':RunCodeFile<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R', ':RunCodeSetCmd<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rr', ':RunCodeFile<CR>', {})
+
+-- set custom commands
+vim.api.nvim_set_keymap('n', '<leader>R1', ':RunCodeSetCustomCmd 1<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R2', ':RunCodeSetCustomCmd 2<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R3', ':RunCodeSetCustomCmd 3<CR>', {})
+
+-- run custom commands
+vim.api.nvim_set_keymap('n', '<leader>r1', ':RunCodeCustomCmd 1<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r2', ':RunCodeCustomCmd 2<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r3', ':RunCodeCustomCmd 3<CR>', {})
 ```
 
 OR (in vim script)
@@ -37,8 +47,17 @@ OR (in vim script)
 " paste this in your init.vim
 
 vmap <leader>r :RunCodeSelected<CR>
-nmap <leader>r :RunCodeFile<CR>
-nmap <leader>R :RunCodeSetCmd<CR>
+nmap <leader>rr :RunCodeFile<CR>
+
+" set custom commands
+nmap <leader>R1 :RunCodeSetCustomCmd 1<CR>
+nmap <leader>R2 :RunCodeSetCustomCmd 2<CR>
+nmap <leader>R3 :RunCodeSetCustomCmd 3<CR>
+
+" run custom commands
+nmap <leader>r1 :RunCodeCustomCmd 1<CR>
+nmap <leader>r2 :RunCodeCustomCmd 2<CR>
+nmap <leader>r3 :RunCodeCustomCmd 3<CR>
 ```
 
 ## Configuration
