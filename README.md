@@ -67,8 +67,7 @@ require('run-code').setup {
   output = {
     buffer = true,
     split_cmd = '20split',
-  },
-  enable_custom_commands = false
+  }
 }
 
 -- optional custom variables
@@ -86,7 +85,6 @@ require('run-code.vars').add_vars({
 | Attributes | Default | Description |
 |------------|---------|-------------|
 | `output` | `{}` | Configuration for how the output is presented |
-| `enable_custom_commands` | `false` | Enable/Disable custom commands feature. If this is set to `true`, the custom command set with `:RunCodeSetCmd`, will be used with `:RunCodeFile` |
 
 
 #### Output options
