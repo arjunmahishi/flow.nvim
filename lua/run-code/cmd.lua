@@ -75,9 +75,19 @@ local function custom_cmd(suffix)
   return vars.vars_to_export() .. "; " .. cmd_str
 end
 
+local function get_custom_cmds()
+  local ls = vim.fn.system(string.format("ls " .. CUSTOM_CMD_FILE, "*"))
+  local cmds = {}
+  for s in ls:gmatch("run_code_custom_cmd_(%g+)") do
+    table.insert(cmds, s)
+  end
+  return cmds
+end
+
 return {
   cmd = cmd,
   custom_cmd = custom_cmd,
   set_custom_cmd = set_custom_cmd,
-  close_custom_cmd_win = close_custom_cmd_win
+  close_custom_cmd_win = close_custom_cmd_win,
+  get_custom_cmds = get_custom_cmds
 }
