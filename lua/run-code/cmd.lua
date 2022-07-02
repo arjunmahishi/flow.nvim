@@ -84,10 +84,16 @@ local function get_custom_cmds()
   return cmds
 end
 
+local function delete_custom_cmd(suffix)
+  local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  os.remove(file_name)
+end
+
 return {
   cmd = cmd,
   custom_cmd = custom_cmd,
   set_custom_cmd = set_custom_cmd,
   close_custom_cmd_win = close_custom_cmd_win,
-  get_custom_cmds = get_custom_cmds
+  get_custom_cmds = get_custom_cmds,
+  delete_custom_cmd = delete_custom_cmd
 }
