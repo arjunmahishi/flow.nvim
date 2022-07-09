@@ -30,10 +30,17 @@ local function custom_cmds()
 
           cmd.set_custom_cmd(action_state.get_current_line())
         end)
+
         map("i", "<c-e>", function ()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           cmd.set_custom_cmd(selection[1])
+        end)
+
+        map("i", "<c-d>", function ()
+          actions.close(prompt_bufnr)
+          local selection = action_state.get_selected_entry()
+          cmd.delete_custom_cmd(selection[1])
         end)
         return true
       end,
