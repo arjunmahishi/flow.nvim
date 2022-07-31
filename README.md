@@ -21,6 +21,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:RunCodeBlock` | Run a code snippet present in markdown (place the cursor within the snippet and run the command) |
 | `:RunCodeSetCustomCmd <alias>` | Set a custom commands to use with `:RunCodeCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
 | `:RunCodeCustomCmd <alias>` | Run the custom command stored at the given alias |
+| `:RunCodeLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher) |
 
 ##### Some useful key bindings
 
