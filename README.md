@@ -23,43 +23,37 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:RunCodeCustomCmd <alias>` | Run the custom command stored at the given alias |
 | `:RunCodeLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher) |
 
-##### Some useful key bindings
+## Custom commands
 
-```lua
--- paste this in your init.lua
+Custom commands are snippets of code you can map to an alias to access and run
+them easily. Custom commands can be created using either `:RunCodeSetCustomCmd`
+or `RunCodeLauncher`. `:RunCodeLauncher` uses a nice telescope interface which
+makes it easy to manage the commands. So, `:RunCodeLauncher` is recommended
+over `:RunCodeSetCustomCmd`.
 
-vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>rr', ':RunCodeFile<CR>', {})
+Running `:RunCodeSetCustomCmd <alias>` launches a special buffer which allows
+you to create a custom command snippet. This buffer automatically closes on
+saving. This remains same even if you are using `:RunCodeLauncher`. Once the
+command snippet is saved, it is available to be executed using the alias you
+have mapped it to.
 
--- set custom commands
-vim.api.nvim_set_keymap('n', '<leader>R1', ':RunCodeSetCustomCmd 1<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R2', ':RunCodeSetCustomCmd 2<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R3', ':RunCodeSetCustomCmd 3<CR>', {})
+#### Custom variables
 
--- run custom commands
-vim.api.nvim_set_keymap('n', '<leader>r1', ':RunCodeCustomCmd 1<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r2', ':RunCodeCustomCmd 2<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r3', ':RunCodeCustomCmd 3<CR>', {})
-```
+Custom commands, at the end of the day, are executed using the shell. So,
+here's a list of `ENV` variables that are available to use while writing the
+command snippets. 
 
-OR (in vim script)
+| Variable | Value |
+|----------|-------|
+| `pwd` | the directory where vim/nvim was launched |
+| `curr_file` | the path of the current file you are editing |
 
-```vim
-" paste this in your init.vim
+The intention of this is to give the command snippets some context of the code
+you are currently writing. You can create some of your own variables by
+declaring them in the plugin configuration (refer to the configuration examples
+below)
 
-vmap <leader>r :RunCodeSelected<CR>
-nmap <leader>rr :RunCodeFile<CR>
-
-" set custom commands
-nmap <leader>R1 :RunCodeSetCustomCmd 1<CR>
-nmap <leader>R2 :RunCodeSetCustomCmd 2<CR>
-nmap <leader>R3 :RunCodeSetCustomCmd 3<CR>
-
-" run custom commands
-nmap <leader>r1 :RunCodeCustomCmd 1<CR>
-nmap <leader>r2 :RunCodeCustomCmd 2<CR>
-nmap <leader>r3 :RunCodeCustomCmd 3<CR>
-```
+Find the docs for `:RunCodeLauncher` [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher)
 
 ## Configuration
 
@@ -104,6 +98,46 @@ require('run-code.vars').add_vars({
 #### Running code snippets within a markdown file
 
 ![run-code-2](https://user-images.githubusercontent.com/11977524/143929192-3c43f4c6-a3bc-4775-b561-c1d78bc8925b.gif)
+
+#### Some useful key bindings
+
+```lua
+-- paste this in your init.lua
+
+vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rr', ':RunCodeFile<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rt', ':RunCodeLauncher<CR>', {})
+
+-- set custom commands
+vim.api.nvim_set_keymap('n', '<leader>R1', ':RunCodeSetCustomCmd 1<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R2', ':RunCodeSetCustomCmd 2<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R3', ':RunCodeSetCustomCmd 3<CR>', {})
+
+-- run custom commands
+vim.api.nvim_set_keymap('n', '<leader>r1', ':RunCodeCustomCmd 1<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r2', ':RunCodeCustomCmd 2<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r3', ':RunCodeCustomCmd 3<CR>', {})
+```
+
+OR (in vim script)
+
+```vim
+" paste this in your init.vim
+
+vmap <leader>r :RunCodeSelected<CR>
+nmap <leader>rr :RunCodeFile<CR>
+nmap <leader>rt :RunCodeLauncher<CR>
+
+" set custom commands
+nmap <leader>R1 :RunCodeSetCustomCmd 1<CR>
+nmap <leader>R2 :RunCodeSetCustomCmd 2<CR>
+nmap <leader>R3 :RunCodeSetCustomCmd 3<CR>
+
+" run custom commands
+nmap <leader>r1 :RunCodeCustomCmd 1<CR>
+nmap <leader>r2 :RunCodeCustomCmd 2<CR>
+nmap <leader>r3 :RunCodeCustomCmd 3<CR>
+```
 
 ---
 
