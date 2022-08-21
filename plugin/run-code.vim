@@ -10,6 +10,7 @@ command! -nargs=? RunCodeCustomCmd lua require('run-code').run_custom_cmd(<f-arg
 command! ReloadRunCode lua require('run-code').reload_plugin()
 command! -nargs=* -range RunCodeSelected call luaeval("require('run-code').run_range(_A)", [<line1>, <line2>, <count>, <f-args>])
 command! RunCodeLauncher lua require('run-code.telescope').custom_cmds()
+command! RunCodeLastCustomCmd lua require('run-code').run_last_custom_cmd()
 
 " trigger reset of output when the output buffer is manually closed
 autocmd FileType run-code-output autocmd BufDelete <buffer> lua require('run-code.output').reset_output_win()

@@ -7,6 +7,7 @@ local custom_command_filetype = 'bash'
 local custom_command_default_split = '10split'
 local custom_command_win = nil
 local custom_command_buf = nil
+local last_custom_cmd = nil
 
 local lang_cmd_map = {
   lua = "lua <<-EOF\n%s\nEOF",
@@ -72,7 +73,9 @@ local function custom_cmd(suffix)
     io.close(custom_cmd_file)
   end
 
-  return vars.vars_to_export() .. "; " .. cmd_str
+  local cmd_with_vars = vars.vars_to_export() .. "; " .. cmd_str
+  last_custom_cmd = cmd_with_vars
+  return cmd_with_vars
 end
 
 local function get_custom_cmds()
@@ -89,11 +92,16 @@ local function delete_custom_cmd(suffix)
   os.remove(file_name)
 end
 
+local function get_last_custom_cmd()
+  return last_custom_cmd
+end
+
 return {
   cmd = cmd,
   custom_cmd = custom_cmd,
   set_custom_cmd = set_custom_cmd,
   close_custom_cmd_win = close_custom_cmd_win,
   get_custom_cmds = get_custom_cmds,
+  get_last_custom_cmd = get_last_custom_cmd,
   delete_custom_cmd = delete_custom_cmd
 }

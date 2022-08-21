@@ -22,6 +22,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:RunCodeSetCustomCmd <alias>` | Set a custom commands to use with `:RunCodeCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
 | `:RunCodeCustomCmd <alias>` | Run the custom command stored at the given alias |
 | `:RunCodeLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher) |
+| `:RunCodeLastCustomCmd` | Run the previously executed custom command |
 
 ## Custom commands
 
@@ -117,6 +118,7 @@ vim.api.nvim_set_keymap('n', '<leader>R3', ':RunCodeSetCustomCmd 3<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r1', ':RunCodeCustomCmd 1<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r2', ':RunCodeCustomCmd 2<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r3', ':RunCodeCustomCmd 3<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rp', ':RunCodeLastCustomCmd<CR>', {})
 ```
 
 OR (in vim script)
@@ -137,6 +139,7 @@ nmap <leader>R3 :RunCodeSetCustomCmd 3<CR>
 nmap <leader>r1 :RunCodeCustomCmd 1<CR>
 nmap <leader>r2 :RunCodeCustomCmd 2<CR>
 nmap <leader>r3 :RunCodeCustomCmd 3<CR>
+nmap <leader>rp :RunCodeLastCustomCmd<CR>
 ```
 
 ---
