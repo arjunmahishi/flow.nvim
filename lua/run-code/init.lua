@@ -62,7 +62,7 @@ end
 
 local function run_custom_cmd(suffix)
   if suffix == nil then
-    print("you need to provide an alias for the custom command (example: :RunCodeCustomCmd 1)")
+    print("run-code: you need to provide an alias for the custom command (example: :RunCodeCustomCmd 1)")
     return
   end
 
@@ -75,12 +75,16 @@ local function run_last_custom_cmd()
   local c = cmd.get_last_custom_cmd()
 
   if c == nil then
-    print("you haven't run a custom command yet")
+    print("run-code: you haven't run a custom command yet")
     return
   end
 
   local out = vim.fn.system(c)
   output.handle_output(out, setup_options.output)
+end
+
+local function show_last_output()
+  output.show_last_output(setup_options.output)
 end
 
 local function reload_plugin()
@@ -98,6 +102,7 @@ return {
   run_file = run_file,
   run_custom_cmd = run_custom_cmd,
   run_last_custom_cmd = run_last_custom_cmd,
+  show_last_output = show_last_output,
   reload_plugin = reload_plugin,
   setup = setup
 }

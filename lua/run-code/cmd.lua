@@ -24,7 +24,7 @@ local lang_cmd_map = {
 -- command
 local function set_custom_cmd(suffix)
   if suffix == nil then
-    print("you need to provide an alias for the custom command (example: :RunCodeSetCustomCmd 1)")
+    print("run-code: you need to provide an alias for the custom command (example: :RunCodeSetCustomCmd 1)")
     return
   end
 

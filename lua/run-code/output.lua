@@ -9,6 +9,7 @@
 local output_buffer_filetype = 'run-code-output'
 local output_win = nil
 local output_buf = nil
+local last_output = nil
 
 local default_split_cmd = 'vsplit'
 
@@ -55,6 +56,7 @@ end
 -- handle_output is the main entry function that orchestrates the
 -- the method of output
 local function handle_output(output, options)
+  last_output = output
   if options.buffer then
     write_to_buffer(output, options)
     return
@@ -63,7 +65,17 @@ local function handle_output(output, options)
   plain_print(output)
 end
 
+local function show_last_output(options)
+  if last_output == nil then
+    print("run-code: you haven't run anything yet")
+    return
+  end
+
+  handle_output(last_output, options)
+end
+
 return {
   handle_output = handle_output,
   reset_output_win = reset_output_win,
+  show_last_output = show_last_output,
 }

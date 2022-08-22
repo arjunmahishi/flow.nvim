@@ -23,6 +23,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:RunCodeCustomCmd <alias>` | Run the custom command stored at the given alias |
 | `:RunCodeLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher) |
 | `:RunCodeLastCustomCmd` | Run the previously executed custom command |
+| `:RunCodeLastOutput` | Show the output of the last run command |
 
 ## Custom commands
 
@@ -119,6 +120,7 @@ vim.api.nvim_set_keymap('n', '<leader>r1', ':RunCodeCustomCmd 1<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r2', ':RunCodeCustomCmd 2<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>r3', ':RunCodeCustomCmd 3<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>rp', ':RunCodeLastCustomCmd<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rp', ':RunCodeLastOutput<CR>', {})
 ```
 
 OR (in vim script)
@@ -140,6 +142,7 @@ nmap <leader>r1 :RunCodeCustomCmd 1<CR>
 nmap <leader>r2 :RunCodeCustomCmd 2<CR>
 nmap <leader>r3 :RunCodeCustomCmd 3<CR>
 nmap <leader>rp :RunCodeLastCustomCmd<CR>
+nmap <leader>ro :RunCodeLastOutput<CR>
 ```
 
 ---
