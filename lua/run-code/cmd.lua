@@ -9,7 +9,7 @@ local custom_command_win = nil
 local custom_command_buf = nil
 local last_custom_cmd = nil
 
-local lang_cmd_map = {
+local filetype_cmd_map = {
   lua = "lua <<-EOF\n%s\nEOF",
   python = "python <<-EOF\n%s\nEOF",
   ruby = "ruby <<-EOF\n%s\nEOF",
@@ -55,7 +55,7 @@ end
 -- EOF
 --
 local function cmd(lang, code)
-  local cmd_tmpl = lang_cmd_map[lang]
+  local cmd_tmpl = filetype_cmd_map[lang]
   if cmd_tmpl == nil then
     return ""
   end
@@ -96,6 +96,16 @@ local function get_last_custom_cmd()
   return last_custom_cmd
 end
 
+local function override_cmd_map(cmd_map)
+  if cmd_map == nil then
+    return
+  end
+
+  for filetype, command in pairs(cmd_map) do
+    filetype_cmd_map[filetype] = command
+  end
+end
+
 return {
   cmd = cmd,
   custom_cmd = custom_cmd,
@@ -103,5 +113,6 @@ return {
   close_custom_cmd_win = close_custom_cmd_win,
   get_custom_cmds = get_custom_cmds,
   get_last_custom_cmd = get_last_custom_cmd,
-  delete_custom_cmd = delete_custom_cmd
+  delete_custom_cmd = delete_custom_cmd,
+  override_cmd_map = override_cmd_map
 }

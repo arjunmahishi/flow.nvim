@@ -94,6 +94,8 @@ end
 
 local function setup(options)
   setup_options = options
+
+  cmd.override_cmd_map(options.filetype_cmd_map)
 end
 
 return {
