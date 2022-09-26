@@ -1,4 +1,4 @@
-# run-code
+# flow.nvim
 
 A lightweight neovim plugin to quickly run a snippet of code (in the context of the current file you’re editing) without ever leaving neovim. Gives you a slight boost in productivity by helping you automate parts of your development workflow. Has a pretty cool integration with telescope
 
@@ -7,7 +7,7 @@ A lightweight neovim plugin to quickly run a snippet of code (in the context of 
 Use you favorite plugin manager. If you use vim-plug, add this to your `init.vim` / `init.lua`
 
 ```vim
-Plug 'arjunmahishi/run-code.nvim'
+Plug 'arjunmahishi/flow.nvim'
 ```
 
 ## Usage
@@ -16,26 +16,25 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 
 | Command | Description |
 |---------|-------------|
-| `:RunCodeSelected` | Run code that is visually selected |
-| `:RunCodeFile` | Run the entire file |
-| `:RunCodeBlock` | Run a code snippet present in markdown (place the cursor within the snippet and run the command) |
-| `:RunCodeSetCustomCmd <alias>` | Set a custom commands to use with `:RunCodeCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
-| `:RunCodeCustomCmd <alias>` | Run the custom command stored at the given alias |
-| `:RunCodeLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher) |
-| `:RunCodeLastCustomCmd` | Run the previously executed custom command |
-| `:RunCodeLastOutput` | Show the output of the last run command |
+| `:FlowRunSelected` | Run code that is visually selected |
+| `:FlowRunFile` | Run the entire file |
+| `:FlowSetCustomCmd <alias>` | Set a custom commands to use with `:FlowRunCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
+| `:FlowRunCustomCmd <alias>` | Run the custom command stored at the given alias |
+| `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Run-code-launcher) |
+| `:FlowRunLastCmd` | Run the previously executed custom command |
+| `:FlowLastOutput` | Show the output of the last run command |
 
 ## Custom commands
 
 Custom commands are snippets of code you can map to an alias to access and run
-them easily. Custom commands can be created using either `:RunCodeSetCustomCmd`
-or `RunCodeLauncher`. `:RunCodeLauncher` uses a nice telescope interface which
-makes it easy to manage the commands. So, `:RunCodeLauncher` is recommended
-over `:RunCodeSetCustomCmd`.
+them easily. Custom commands can be created using either `:FlowSetCustomCmd`
+or `FlowLauncher`. `:FlowLauncher` uses a nice telescope interface which
+makes it easy to manage the commands. So, `:FlowLauncher` is recommended
+over `:FlowSetCustomCmd`.
 
-Running `:RunCodeSetCustomCmd <alias>` launches a special buffer which allows
+Running `:FlowSetCustomCmd <alias>` launches a special buffer which allows
 you to create a custom command snippet. This buffer automatically closes on
-saving. This remains same even if you are using `:RunCodeLauncher`. Once the
+saving. This remains same even if you are using `:FlowLauncher`. Once the
 command snippet is saved, it is available to be executed using the alias you
 have mapped it to.
 
@@ -55,12 +54,12 @@ you are currently writing. You can create some of your own variables by
 declaring them in the plugin configuration (refer to the configuration examples
 below)
 
-Find the docs for `:RunCodeLauncher` [here](https://github.com/arjunmahishi/run-code.nvim/wiki/Run-code-launcher)
+Find the docs for `:FlowLauncher` [here](https://github.com/arjunmahishi/flow.nvim/wiki/Run-code-launcher)
 
 ## Configuration
 
 ```lua
-require('run-code').setup {
+require('flow').setup {
   output = {
     buffer = true,
     split_cmd = '20split',
@@ -76,7 +75,7 @@ require('run-code').setup {
 }
 
 -- optional custom variables
-require('run-code.vars').add_vars({
+require('flow.vars').add_vars({
   str = "test-val-2",
   num = 3,
   bool = true,
@@ -103,32 +102,28 @@ require('run-code.vars').add_vars({
 
 #### Running the whole file / Run selective snippets
 
-![run-code-1](https://user-images.githubusercontent.com/11977524/143928407-5b440a4f-fd7b-440c-940a-088ac1006a85.gif)
-
-#### Running code snippets within a markdown file
-
-![run-code-2](https://user-images.githubusercontent.com/11977524/143929192-3c43f4c6-a3bc-4775-b561-c1d78bc8925b.gif)
+![flow-1](https://user-images.githubusercontent.com/11977524/143928407-5b440a4f-fd7b-440c-940a-088ac1006a85.gif)
 
 #### Some useful key bindings
 
 ```lua
 -- paste this in your init.lua
 
-vim.api.nvim_set_keymap('v', '<leader>r', ':RunCodeSelected<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>rr', ':RunCodeFile<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>rt', ':RunCodeLauncher<CR>', {})
+vim.api.nvim_set_keymap('v', '<leader>r', ':FlowRunSelected<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rr', ':FlowRunFile<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rt', ':FlowLauncher<CR>', {})
 
 -- set custom commands
-vim.api.nvim_set_keymap('n', '<leader>R1', ':RunCodeSetCustomCmd 1<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R2', ':RunCodeSetCustomCmd 2<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R3', ':RunCodeSetCustomCmd 3<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R1', ':FlowSetCustomCmd 1<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R2', ':FlowSetCustomCmd 2<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>R3', ':FlowSetCustomCmd 3<CR>', {})
 
 -- run custom commands
-vim.api.nvim_set_keymap('n', '<leader>r1', ':RunCodeCustomCmd 1<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r2', ':RunCodeCustomCmd 2<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r3', ':RunCodeCustomCmd 3<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>rp', ':RunCodeLastCustomCmd<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>rp', ':RunCodeLastOutput<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r1', ':FlowRunCustomCmd 1<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r2', ':FlowRunCustomCmd 2<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>r3', ':FlowRunCustomCmd 3<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rp', ':FlowRunLastCmd<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>rp', ':FlowLastOutput<CR>', {})
 ```
 
 OR (in vim script)
@@ -136,21 +131,21 @@ OR (in vim script)
 ```vim
 " paste this in your init.vim
 
-vmap <leader>r :RunCodeSelected<CR>
-nmap <leader>rr :RunCodeFile<CR>
-nmap <leader>rt :RunCodeLauncher<CR>
+vmap <leader>r :FlowRunSelected<CR>
+nmap <leader>rr :FlowRunFile<CR>
+nmap <leader>rt :FlowLauncher<CR>
 
 " set custom commands
-nmap <leader>R1 :RunCodeSetCustomCmd 1<CR>
-nmap <leader>R2 :RunCodeSetCustomCmd 2<CR>
-nmap <leader>R3 :RunCodeSetCustomCmd 3<CR>
+nmap <leader>R1 :FlowSetCustomCmd 1<CR>
+nmap <leader>R2 :FlowSetCustomCmd 2<CR>
+nmap <leader>R3 :FlowSetCustomCmd 3<CR>
 
 " run custom commands
-nmap <leader>r1 :RunCodeCustomCmd 1<CR>
-nmap <leader>r2 :RunCodeCustomCmd 2<CR>
-nmap <leader>r3 :RunCodeCustomCmd 3<CR>
-nmap <leader>rp :RunCodeLastCustomCmd<CR>
-nmap <leader>ro :RunCodeLastOutput<CR>
+nmap <leader>r1 :FlowRunCustomCmd 1<CR>
+nmap <leader>r2 :FlowRunCustomCmd 2<CR>
+nmap <leader>r3 :FlowRunCustomCmd 3<CR>
+nmap <leader>rp :FlowRunLastCmd<CR>
+nmap <leader>ro :FlowLastOutput<CR>
 ```
 
 ---
