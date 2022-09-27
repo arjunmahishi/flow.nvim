@@ -1,7 +1,7 @@
-local extract = require('run-code.extract')
-local md = require('run-code.markdown')
-local cmd = require("run-code.cmd")
-local output = require("run-code.output")
+local extract = require('flow.extract')
+local md = require('flow.markdown')
+local cmd = require("flow.cmd")
+local output = require("flow.output")
 local default_setup_options = {
   output = {
     buffer = false
@@ -14,7 +14,7 @@ local function run(filetype, code)
   local c = cmd.cmd(filetype, code)
   if c == "" then
     print(string.format(
-      "run-code: the language '%s' doesn't seem to be supported yet", filetype
+      "flow: the language '%s' doesn't seem to be supported yet", filetype
     ))
     return
   end
@@ -28,7 +28,7 @@ local function handle_md_file(lines)
   local block = md.select_block(blocks)
 
   if block == nil then
-    print("run-code: you are not on any code block")
+    print("flow: you are not on any code block")
     return
   end
 
@@ -39,7 +39,7 @@ local function run_block()
   local lines = extract.lines_from_current_buffer()
 
   if vim.bo.filetype ~= "markdown" then
-    print("run-code: sorry! currently RunCodeBlock is only supported in markdown")
+    print("flow: sorry! currently RunCodeBlock is only supported in markdown")
     return
   end
 
@@ -62,7 +62,7 @@ end
 
 local function run_custom_cmd(suffix)
   if suffix == nil then
-    print("run-code: you need to provide an alias for the custom command (example: :RunCodeCustomCmd 1)")
+    print("flow: you need to provide an alias for the custom command (example: :RunCodeCustomCmd 1)")
     return
   end
 
@@ -75,7 +75,7 @@ local function run_last_custom_cmd()
   local c = cmd.get_last_custom_cmd()
 
   if c == nil then
-    print("run-code: you haven't run a custom command yet")
+    print("flow: you haven't run a custom command yet")
     return
   end
 
@@ -88,8 +88,8 @@ local function show_last_output()
 end
 
 local function reload_plugin()
-  package.loaded['run-code'] = nil
-  print "reloaded run-code"
+  package.loaded['flow'] = nil
+  print "reloaded flow"
 end
 
 local function setup(options)

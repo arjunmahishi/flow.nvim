@@ -1,4 +1,4 @@
-local vars = require('run-code.vars')
+local vars = require('flow.vars')
 
 local DATA_DIR = vim.fn.stdpath("data")
 local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
@@ -24,7 +24,7 @@ local filetype_cmd_map = {
 -- command
 local function set_custom_cmd(suffix)
   if suffix == nil then
-    print("run-code: you need to provide an alias for the custom command (example: :RunCodeSetCustomCmd 1)")
+    print("flow: you need to provide an alias for the custom command (example: :RunCodeSetCustomCmd 1)")
     return
   end
 

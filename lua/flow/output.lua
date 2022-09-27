@@ -67,7 +67,7 @@ end
 
 local function show_last_output(options)
   if last_output == nil then
-    print("run-code: you haven't run anything yet")
+    print("flow: you haven't run anything yet")
     return
   end
 

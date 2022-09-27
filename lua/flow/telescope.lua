@@ -1,5 +1,5 @@
-local cmd = require("run-code.cmd")
-local run_custom_cmd = require("run-code").run_custom_cmd
+local cmd = require("flow.cmd")
+local run_custom_cmd = require("flow").run_custom_cmd
 local pickers = require("telescope.pickers")
 local finders = require ("telescope.finders")
 local conf = require("telescope.config").values
