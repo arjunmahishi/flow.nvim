@@ -54,7 +54,7 @@ you are currently writing. You can create some of your own variables by
 declaring them in the plugin configuration (refer to the configuration examples
 below)
 
-Find the docs for `:FlowLauncher` [here](https://github.com/arjunmahishi/flow.nvim/wiki/Run-code-launcher)
+Find the docs for `:FlowLauncher` [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher)
 
 ## Configuration
 
