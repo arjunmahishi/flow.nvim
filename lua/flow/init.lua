@@ -12,10 +12,7 @@ local setup_options = default_setup_options
 
 local function run(filetype, code)
   local c = cmd.cmd(filetype, code)
-  if c == "" then
-    print(string.format(
-      "flow: the language '%s' doesn't seem to be supported yet", filetype
-    ))
+  if c == nil then
     return
   end
 

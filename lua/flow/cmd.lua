@@ -1,4 +1,5 @@
 local vars = require('flow.vars')
+local sql = require('flow.sql')
 
 local DATA_DIR = vim.fn.stdpath("data")
 local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
@@ -17,7 +18,7 @@ local filetype_cmd_map = {
   sh = "sh <<-EOF\n%s\nEOF",
   scheme = "scheme <<-EOF\n%s\nEOF",
   javascript = "node <<-EOF\n%s\nEOF",
-  go = "go run ."
+  go = "go run .",
 }
 
 -- set_custom_cmd opens a small buffer that allows the user to edit the custom
@@ -55,9 +56,16 @@ end
 -- EOF
 --
 local function cmd(lang, code)
+  if lang == "sql" then
+    return sql.cmd(code)
+  end
+
   local cmd_tmpl = filetype_cmd_map[lang]
   if cmd_tmpl == nil then
-    return ""
+    print(string.format(
+      "flow: the language '%s' doesn't seem to be supported yet", lang
+    ))
+    return nil
   end
 
   return string.format(cmd_tmpl, code)
