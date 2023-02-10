@@ -6,6 +6,7 @@ local cmd_tmpl = {
 
 local M = {}
 
+M.default_config = nil
 M.configs = {}
 
 M.cmd = function(query)
@@ -24,6 +25,10 @@ M.cmd = function(query)
   return string.format(
     cmd, config.user, config.password, config.host, config.port, config.db, query
   )
+end
+
+M.set_default_config = function(config)
+  M.default_config = config
 end
 
 return M
