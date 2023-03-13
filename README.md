@@ -101,12 +101,6 @@ require('flow.vars').add_vars({
 | `buffer` | `false` | Whether to print the output in a buffer or not. By default the output is printed in the command window. If this option is set to `true`, the output will be shown in a separate buffer |
 | `split_cmd` | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
 
-## Demo
-
-#### Running the whole file / Run selective snippets
-
-![flow-1](https://user-images.githubusercontent.com/11977524/143928407-5b440a4f-fd7b-440c-940a-088ac1006a85.gif)
-
 #### Some useful key bindings
 
 ```lua
