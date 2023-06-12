@@ -8,6 +8,18 @@ local M = {}
 
 M.default_config = nil
 M.configs = {}
+-- sample config:
+--
+-- [
+--    {
+--      "type": "postgres",
+--      "user": "postgres",
+--      "password": "postgres",
+--      "host": "localhost",
+--      "port": "5432",
+--      "db": "db_name"
+--    }
+-- ]
 
 M.cmd = function(query)
   if #M.configs == 0 then
