@@ -71,7 +71,10 @@ require('flow').setup {
   -- Format { <filetype> = <command> }
   filetype_cmd_map = {
     python = "python3 <<-EOF\n%s\nEOF",
-  }
+  },
+
+  -- optional DB configuration for running .sql files/snippets
+  sql_configs = require('flow.util').read_sql_config('/Users/arjunmahishi/.db_config.json')
 }
 
 -- optional custom variables
@@ -97,6 +100,23 @@ require('flow.vars').add_vars({
 |--------|---------|-------------|
 | `buffer` | `false` | Whether to print the output in a buffer or not. By default the output is printed in the command window. If this option is set to `true`, the output will be shown in a separate buffer |
 | `split_cmd` | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
+
+#### Sample dB config file
+
+`.db_config.json`
+
+```
+[
+   {
+     "type": "postgres",
+     "user": "postgres",
+     "password": "password",
+     "host": "localhost",
+     "port": "5432",
+     "db": "flow_nvim_test_db"
+   }
+]
+```
 
 ## Demo
 
