@@ -2,6 +2,8 @@ local extract = require('flow.extract')
 local md = require('flow.markdown')
 local cmd = require("flow.cmd")
 local output = require("flow.output")
+local sql = require("flow.sql")
+
 local default_setup_options = {
   output = {
     buffer = false
@@ -12,10 +14,7 @@ local setup_options = default_setup_options
 
 local function run(filetype, code)
   local c = cmd.cmd(filetype, code)
-  if c == "" then
-    print(string.format(
-      "flow: the language '%s' doesn't seem to be supported yet", filetype
-    ))
+  if c == nil then
     return
   end
 
@@ -96,6 +95,7 @@ local function setup(options)
   setup_options = options
 
   cmd.override_cmd_map(options.filetype_cmd_map)
+  sql.configs = options.sql_configs
 end
 
 return {

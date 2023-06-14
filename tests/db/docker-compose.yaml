@@ -1,0 +1,25 @@
+version: '3.5'
+
+services:
+  test_db:
+    container_name: flow_nvim_test_db
+    image: postgres
+    environment:
+      POSTGRES_DB: flow_nvim_test_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+
+  wait_postgres:
+    image: "waisbrot/wait"
+    networks:
+      - default
+    environment:
+      TARGETS: test_db:5432
+
+networks:
+  flow_db:
+    driver: bridge
