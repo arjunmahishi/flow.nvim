@@ -1,5 +1,8 @@
 # flow.nvim
 
+[![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)](https://neovim.io/)
+[![Lua](https://img.shields.io/badge/Lua-blue.svg?style=for-the-badge&logo=lua)](http://www.lua.org)
+
 A lightweight neovim plugin to quickly run a snippet of code (in the context of the current file you’re editing) without ever leaving neovim. Gives you a slight boost in productivity by helping you automate parts of your development workflow. Has a pretty cool integration with telescope
 
 ## Installation
@@ -20,7 +23,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:FlowRunFile` | Run the entire file |
 | `:FlowSetCustomCmd <alias>` | Set a custom commands to use with `:FlowRunCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
 | `:FlowRunCustomCmd <alias>` | Run the custom command stored at the given alias |
-| `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Run-code-launcher) |
+| `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher) |
 | `:FlowRunLastCmd` | Run the previously executed custom command |
 | `:FlowLastOutput` | Show the output of the last run command |
 
@@ -119,12 +122,6 @@ require('flow.vars').add_vars({
    }
 ]
 ```
-
-## Demo
-
-#### Running the whole file / Run selective snippets
-
-![flow-1](https://user-images.githubusercontent.com/11977524/143928407-5b440a4f-fd7b-440c-940a-088ac1006a85.gif)
 
 #### Some useful key bindings
 
