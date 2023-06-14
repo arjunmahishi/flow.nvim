@@ -73,7 +73,7 @@ require('flow').setup {
     python = "python3 <<-EOF\n%s\nEOF",
   },
 
-  -- optional DB configuration for running .sql files/snippets
+  -- optional DB configuration for running .sql files/snippets (experimental)
   sql_configs = require('flow.util').read_sql_config('/Users/arjunmahishi/.db_config.json')
 }
 
@@ -102,6 +102,8 @@ require('flow.vars').add_vars({
 | `split_cmd` | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
 
 #### Sample dB config file
+
+⚠️  This is still experimental
 
 `.db_config.json`
 
