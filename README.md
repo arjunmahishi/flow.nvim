@@ -5,6 +5,10 @@
 
 A lightweight neovim plugin to quickly run a snippet of code (in the context of the current file you’re editing) without ever leaving neovim. Gives you a slight boost in productivity by helping you automate parts of your development workflow. Has a pretty cool integration with telescope
 
+## Demo
+
+It's hard(for me) to do justice to this plugin by explaining what it does, in text form. Watch the demo [here](https://www.youtube.com/watch?v=GE5E1ZhV_Ok).
+
 ## Installation
 
 Use you favorite plugin manager. If you use vim-plug, add this to your `init.vim` / `init.lua`
