@@ -25,8 +25,14 @@ end
 local function write_to_buffer(output, options)
   local current_working_window = vim.api.nvim_get_current_win()
 
-  -- spawn a new window an buffer if this is the first run
-  if output_win == nil then
+  -- if this is the first time OR if the window was manually closed
+  -- create a fresh output window+buffer set
+  if output_win == nil or not vim.api.nvim_win_is_valid(output_win) then
+    -- remove the stale buffer, if it exists
+    if output_buf ~= nil then
+      vim.api.nvim_buf_delete(output_buf, { force = true })
+    end
+
     vim.cmd(options.split_cmd or default_split_cmd)
     output_win = vim.api.nvim_get_current_win()
     output_buf = vim.api.nvim_create_buf(true, true)
