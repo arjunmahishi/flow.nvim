@@ -6,20 +6,14 @@
 -- Printing on STDOUT is simple calling the lua print function. Where as
 -- printing in a separate buffer can be more configurable
 
+local str_split = require('flow.util').str_split
+
 local output_buffer_filetype = 'run-code-output'
 local output_win = nil
 local output_buf = nil
 local last_output = nil
 
 local default_split_cmd = 'vsplit'
-
-local function str_split(s, delimiter)
-  local result = {}
-  for match in (s..delimiter):gmatch('(.-)'..delimiter) do
-    table.insert(result, match);
-  end
-  return result
-end
 
 -- TODO: make the output buffer read only
 local function write_to_buffer(output, options)

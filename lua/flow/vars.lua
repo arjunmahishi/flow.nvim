@@ -41,7 +41,17 @@ local function add_vars(vars)
   end
 end
 
+local function vars_help_text()
+  local help_text = "# Variables available for use:\n"
+  for key, func in pairs(cmd_variables) do
+    help_text = help_text .. string.format("#  - $%s\n", key)
+  end
+
+  return help_text
+end
+
 return {
   vars_to_export = vars_to_export,
-  add_vars = add_vars
+  add_vars = add_vars,
+  vars_help_text = vars_help_text,
 }

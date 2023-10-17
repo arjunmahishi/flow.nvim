@@ -1,5 +1,6 @@
 local vars = require('flow.vars')
 local sql = require('flow.sql')
+local util = require('flow.util')
 
 local DATA_DIR = vim.fn.stdpath("data")
 local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
@@ -30,6 +31,16 @@ local function set_custom_cmd(suffix)
   end
 
   local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  local is_new_file = not util.file_exists(file_name)
+
+  if is_new_file then
+    local help_text = vars.vars_help_text()
+
+    local file = io.open(file_name, "w")
+    file:write("\n\n" .. help_text)
+    file:close()
+  end
+
   vim.cmd(custom_command_default_split .. ' ' .. file_name)
   custom_command_win = vim.api.nvim_get_current_win()
   custom_command_buf = vim.api.nvim_get_current_buf()
