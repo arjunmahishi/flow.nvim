@@ -109,6 +109,7 @@ end
 local function delete_custom_cmd(suffix)
   local file_name = string.format(CUSTOM_CMD_FILE, suffix)
   os.remove(file_name)
+  print(string.format("flow: deleted custom command '%s'", suffix))
 end
 
 local function get_last_custom_cmd()
