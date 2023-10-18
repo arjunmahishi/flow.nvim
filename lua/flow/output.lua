@@ -14,9 +14,78 @@ local output_buf = nil
 local last_output = nil
 
 local default_split_cmd = 'vsplit'
+local default_type = 'float'
+local default_focused = true
+local default_modifiable = false
+local default_buffer_size = 80
 
--- TODO: make the output buffer read only
 local function write_to_buffer(output, options)
+  output = output:gsub("%s+$", "")
+
+  -- if there is no output, then just print a message and return
+  if output == "" then
+    print("flow: no output to display")
+    return
+  end
+
+  local output_arr = str_split(output, '\n')
+  local current_working_window = vim.api.nvim_get_current_win()
+  local buffer_type = options.type or default_type 
+  local size = options.size or default_buffer_size
+  local win_cols = vim.api.nvim_get_option('columns')
+  local win_rows = vim.api.nvim_get_option('lines')
+  local output_win_config = {
+    relative = 'editor',
+    border = 'double',
+    style = 'minimal',
+  }
+
+  -- if the size is auto, then calculate the size based on the
+  -- output length.
+  if size == "auto" then
+    local max_len = 0
+    for _, line in ipairs(output_arr) do
+      if #line > max_len then
+        max_len = #line
+      end
+    end
+
+    output_win_config.width = math.min(max_len + 4, math.floor(win_cols * 0.9))
+    output_win_config.height = math.min(#output_arr, math.floor(win_rows * 0.9))
+  else
+    output_win_config.width = math.floor((win_cols * size) / 100)
+    output_win_config.height = math.floor((win_rows * size) / 100)
+  end
+
+  -- place the window at the center of the screen
+  output_win_config.col = math.floor((win_cols - output_win_config.width) / 2)
+  output_win_config.row = math.floor((win_rows - output_win_config.height) / 2)
+  
+  -- Create the floating window
+  local win = vim.api.nvim_open_win(0, true, output_win_config)
+
+  -- create buffer
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- set buffer
+  vim.api.nvim_win_set_buf(win, buf)
+
+  -- set lines
+  vim.api.nvim_buf_set_lines(buf, 0, -1, true, output_arr)
+
+  -- modifiability
+  vim.api.nvim_buf_set_option(buf, 'modifiable', options.modifiable or default_modifiable)
+
+  -- set keymap to close window when <esc> is pressed
+  vim.api.nvim_buf_set_keymap(buf, 'n', '<esc>', ':q<cr>', {noremap = true, silent = true})
+
+  -- if focused is false, then set focus back to the original window
+  if options.focused == false then
+    vim.api.nvim_set_current_win(current_working_window)
+  end
+end
+
+local function write_to_buffer_legacy(output, options)
   local current_working_window = vim.api.nvim_get_current_win()
 
   -- if this is the first time OR if the window was manually closed
@@ -58,7 +127,12 @@ end
 local function handle_output(output, options)
   last_output = output
   if options.buffer then
-    write_to_buffer(output, options)
+    if options.split_cmd ~= nil then
+      write_to_buffer_legacy(output, options)
+      return
+    end
+
+    write_to_buffer(output, options) 
     return
   end
 
