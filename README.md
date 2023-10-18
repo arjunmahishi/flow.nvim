@@ -5,9 +5,25 @@
 
 A lightweight neovim plugin to quickly run a snippet of code (in the context of the current file you’re editing) without ever leaving neovim. Gives you a slight boost in productivity by helping you automate parts of your development workflow. Has a pretty cool integration with telescope
 
+## Table of contents
+
+<!-- toc -->
+
+- [Demo](#demo)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Custom commands](#custom-commands)
+    + [Custom variables](#custom-variables)
+- [Configuration](#configuration)
+    + [`output` options](#output-options)
+    + [Sample dB config file](#sample-db-config-file)
+- [Some useful key bindings](#some-useful-key-bindings)
+
+<!-- tocstop -->
+
 ## Demo
 
-It's hard(for me) to do justice to this plugin by explaining what it does, in text form. Watch the demo [here](https://www.youtube.com/watch?v=GE5E1ZhV_Ok).
+It's hard to do justice to this plugin by explaining what it does, in text form. [**Watch the demo here**](https://www.youtube.com/watch?v=GE5E1ZhV_Ok).
 
 ## Installation
 
@@ -25,8 +41,6 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 |---------|-------------|
 | `:FlowRunSelected` | Run code that is visually selected |
 | `:FlowRunFile` | Run the entire file |
-| `:FlowSetCustomCmd <alias>` | Set a custom commands to use with `:FlowRunCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
-| `:FlowRunCustomCmd <alias>` | Run the custom command stored at the given alias |
 | `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher) |
 | `:FlowRunLastCmd` | Run the previously executed custom command |
 | `:FlowLastOutput` | Show the output of the last run command |
@@ -69,7 +83,17 @@ Find the docs for `:FlowLauncher` [here](https://github.com/arjunmahishi/flow.nv
 require('flow').setup {
   output = {
     buffer = true,
-    split_cmd = '20split',
+    size = 80, -- possible values: "auto" (default) OR 1-100 (percentage of screen to cover)
+    focused = true,
+    modifiable = false,
+
+    -- window_override = {
+    --   border = 'double',
+    --   title = 'Output',
+    --   title_pos = 'center',
+    --   style = 'minimal',
+    --   ...
+    -- }
   },
 
   -- add/override the default command used for a perticular filetype
@@ -99,14 +123,20 @@ require('flow.vars').add_vars({
 | Attributes | Default | Description |
 |------------|---------|-------------|
 | `output` | `{}` | Configuration for how the output is presented |
+| `filetype_cmd_map` | `{}` | add/override the default command used for a particular filetype |
+| `sql_configs` | `nil` | optional DB configuration for running .sql files/snippets _(experimental)_ |
 
 
-#### Output options
+#### `output` options
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `buffer` | `false` | Whether to print the output in a buffer or not. By default the output is printed in the command window. If this option is set to `true`, the output will be shown in a separate buffer |
-| `split_cmd` | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
+| `buffer` | `true` | Whether to print the output in a floating buffer or not. If this option is set to `false`, the output will be shown in the command window |
+| `size` | `auto` | `auto` or `1-100` (percentage of screen to cover) |
+| `focused` | `true` | If this is set to `false`, the focus will be set back to your current working window |
+| `modifiable` | `false` | If this is set to `true`, the output buffer will be editable |
+| `window_override` | `{}` | You can override one or more attributes of the output window config. This can work in conjunction with `size`. Check the available parameters in `:help api-win_config` |
+| `split_cmd` (deprecated) | `vsplit` | Configure how the output buffer should be created. For now, only split buffers are supported. Possible values for this option are `split`, `vsplit`, `nsplit`, `nvsplit`. Where `n` is  the hight/width of the split buffer |
 
 #### Sample dB config file
 
@@ -127,7 +157,7 @@ require('flow.vars').add_vars({
 ]
 ```
 
-#### Some useful key bindings
+## Some useful key bindings
 
 ```lua
 -- paste this in your init.lua
@@ -135,16 +165,6 @@ require('flow.vars').add_vars({
 vim.api.nvim_set_keymap('v', '<leader>r', ':FlowRunSelected<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>rr', ':FlowRunFile<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>rt', ':FlowLauncher<CR>', {})
-
--- set custom commands
-vim.api.nvim_set_keymap('n', '<leader>R1', ':FlowSetCustomCmd 1<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R2', ':FlowSetCustomCmd 2<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>R3', ':FlowSetCustomCmd 3<CR>', {})
-
--- run custom commands
-vim.api.nvim_set_keymap('n', '<leader>r1', ':FlowRunCustomCmd 1<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r2', ':FlowRunCustomCmd 2<CR>', {})
-vim.api.nvim_set_keymap('n', '<leader>r3', ':FlowRunCustomCmd 3<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>rp', ':FlowRunLastCmd<CR>', {})
 vim.api.nvim_set_keymap('n', '<leader>rp', ':FlowLastOutput<CR>', {})
 ```
@@ -157,16 +177,6 @@ OR (in vim script)
 vmap <leader>r :FlowRunSelected<CR>
 nmap <leader>rr :FlowRunFile<CR>
 nmap <leader>rt :FlowLauncher<CR>
-
-" set custom commands
-nmap <leader>R1 :FlowSetCustomCmd 1<CR>
-nmap <leader>R2 :FlowSetCustomCmd 2<CR>
-nmap <leader>R3 :FlowSetCustomCmd 3<CR>
-
-" run custom commands
-nmap <leader>r1 :FlowRunCustomCmd 1<CR>
-nmap <leader>r2 :FlowRunCustomCmd 2<CR>
-nmap <leader>r3 :FlowRunCustomCmd 3<CR>
 nmap <leader>rp :FlowRunLastCmd<CR>
 nmap <leader>ro :FlowLastOutput<CR>
 ```
