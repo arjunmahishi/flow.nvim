@@ -134,18 +134,20 @@ end
 -- handle_output is the main entry function that orchestrates the
 -- the method of output
 local function handle_output(output, options)
-  last_output = output
-  if options.buffer then
-    if options.split_cmd ~= nil then
-      write_to_buffer_legacy(output, options)
-      return
-    end
+  options = options or {}
 
-    write_to_buffer(output, options) 
+  last_output = output
+  if options.buffer == false then
+    plain_print(output)
     return
   end
 
-  plain_print(output)
+  if options.split_cmd ~= nil then
+    write_to_buffer_legacy(output, options)
+    return
+  end
+
+  write_to_buffer(output, options) 
 end
 
 local function show_last_output(options)
