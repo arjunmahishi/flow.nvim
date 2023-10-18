@@ -25,8 +25,6 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 |---------|-------------|
 | `:FlowRunSelected` | Run code that is visually selected |
 | `:FlowRunFile` | Run the entire file |
-| `:FlowSetCustomCmd <alias>` | Set a custom commands to use with `:FlowRunCustomCmd`. This custom command would be used instead of the default run command used for a specific language |
-| `:FlowRunCustomCmd <alias>` | Run the custom command stored at the given alias |
 | `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher) |
 | `:FlowRunLastCmd` | Run the previously executed custom command |
 | `:FlowLastOutput` | Show the output of the last run command |
