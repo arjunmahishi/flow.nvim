@@ -17,20 +17,9 @@ local default_split_cmd = 'vsplit'
 local default_type = 'float'
 local default_focused = true
 local default_modifiable = false
-local default_buffer_size = 80
+local default_buffer_size = "auto"
 
-local function write_to_buffer(output, options)
-  output = output:gsub("%s+$", "")
-
-  -- if there is no output, then just print a message and return
-  if output == "" then
-    print("flow: no output to display")
-    return
-  end
-
-  local output_arr = str_split(output, '\n')
-  local current_working_window = vim.api.nvim_get_current_win()
-  local buffer_type = options.type or default_type 
+function get_output_win_config(output_arr, options)
   local size = options.size or default_buffer_size
   local win_cols = vim.api.nvim_get_option('columns')
   local win_rows = vim.api.nvim_get_option('lines')
@@ -60,9 +49,29 @@ local function write_to_buffer(output, options)
   -- place the window at the center of the screen
   output_win_config.col = math.floor((win_cols - output_win_config.width) / 2)
   output_win_config.row = math.floor((win_rows - output_win_config.height) / 2)
+
+  -- override the config values if the custom_window is set
+  for key, value in pairs(options.window_override or {}) do
+    output_win_config[key] = value
+  end
+
+  return output_win_config
+end
+
+local function write_to_buffer(output, options)
+  output = output:gsub("%s+$", "")
+
+  -- if there is no output, then just print a message and return
+  if output == "" then
+    print("flow: no output to display")
+    return
+  end
+
+  local output_arr = str_split(output, '\n')
+  local current_working_window = vim.api.nvim_get_current_win()
   
   -- Create the floating window
-  local win = vim.api.nvim_open_win(0, true, output_win_config)
+  local win = vim.api.nvim_open_win(0, true, get_output_win_config(output_arr, options))
 
   -- create buffer
   local buf = vim.api.nvim_create_buf(false, true)
