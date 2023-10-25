@@ -14,7 +14,6 @@ local output_buf = nil
 local last_output = nil
 
 local default_split_cmd = 'vsplit'
-local default_type = 'float'
 local default_focused = true
 local default_modifiable = false
 local default_buffer_size = "auto"
@@ -50,7 +49,7 @@ function get_output_win_config(output_arr, options)
   output_win_config.col = math.floor((win_cols - output_win_config.width) / 2)
   output_win_config.row = math.floor((win_rows - output_win_config.height) / 2)
 
-  -- override the config values if the custom_window is set
+  -- override the config values if window_override is set
   for key, value in pairs(options.window_override or {}) do
     output_win_config[key] = value
   end
@@ -85,8 +84,9 @@ local function write_to_buffer(output, options)
   -- modifiability
   vim.api.nvim_buf_set_option(buf, 'modifiable', options.modifiable or default_modifiable)
 
-  -- set keymap to close window when <esc> is pressed
+  -- set keymap to close window when <esc> or <enter> is pressed
   vim.api.nvim_buf_set_keymap(buf, 'n', '<esc>', ':q<cr>', {noremap = true, silent = true})
+  vim.api.nvim_buf_set_keymap(buf, 'n', '<enter>', ':q<cr>', {noremap = true, silent = true})
 
   -- if focused is false, then set focus back to the original window
   if options.focused == false then
