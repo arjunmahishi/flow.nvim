@@ -12,11 +12,16 @@ local output_buffer_filetype = 'run-code-output'
 local output_win = nil
 local output_buf = nil
 local last_output = nil
+local job_id = nil
 
 local default_split_cmd = 'vsplit'
 local default_focused = true
 local default_modifiable = false
 local default_buffer_size = "auto"
+
+function stop_job()
+  vim.fn.jobstop(job_id)
+end
 
 function get_output_win_config(output_arr, options)
   local size = options.size or default_buffer_size
@@ -131,23 +136,96 @@ local function plain_print(output)
   print(output)
 end
 
+-- data is the array that the on_stdout/on_stderr callbacks receive
+local function clean_output_data(data)
+  clean_data = {}
+  for i, line in ipairs(data) do
+    if line ~= "" then
+      table.insert(clean_data, line)
+    end
+  end
+
+  return clean_data
+end
+
+local function stream_output(cmd, options)
+  local win_launched = false
+  local buffer = nil
+  local win = nil
+  local command = { "bash", "-c", cmd }
+
+  output_callback = function(_, data, _)
+    data = clean_output_data(data)
+    if #data == 0 then
+      return
+    end
+
+    if not win_launched then
+      -- win = vim.api.nvim_open_win(0, true, get_output_win_config(data, options))
+      win = vim.api.nvim_open_win(0, true, {
+        width = 80, height = 20, col = 0, row = 0,
+        relative = 'editor', style = 'minimal',
+      })
+      win_launched = true
+
+      buffer = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_win_set_buf(win, buffer)
+
+      vim.api.nvim_buf_set_keymap(buffer, 'n', '<esc>', ':q<cr>', {noremap = true, silent = true})
+
+      -- stop the job when <C-c> is pressed
+      vim.api.nvim_buf_set_keymap(buffer, 'n', '<c-c>', ':lua require("flow.output").stop_job()<cr>', {noremap = true, silent = true})
+
+    end
+
+    vim.api.nvim_buf_set_lines(buffer, -1, -1, false, data)
+    buf_contents = vim.api.nvim_buf_get_lines(buffer, 0, -1, false)
+    vim.api.nvim_win_set_config(win, get_output_win_config(buf_contents, options))
+
+    -- scroll to the bottom of the buffer
+    vim.api.nvim_win_set_cursor(win, {vim.api.nvim_buf_line_count(buffer), 0})
+  end
+
+  job_id = vim.fn.jobstart(command, {
+    on_stdout = output_callback,
+    on_stderr = output_callback,
+    on_exit = function(_, data, _)
+      vim.api.nvim_buf_set_keymap(buffer, 'n', '<enter>', ':q<cr>', {noremap = true, silent = true})
+
+      if buffer == nil then
+        return
+      end
+
+      if data == 143 then
+        vim.api.nvim_buf_set_lines(buffer, -1, -1, false, {"[inturrupted by user]"})
+        return
+      end
+
+      vim.api.nvim_buf_set_lines(buffer, -1, -1, false, {"[exit code: " .. data .. "]"})
+    end,
+  })
+end
+
 -- handle_output is the main entry function that orchestrates the
 -- the method of output
-local function handle_output(output, options)
+local function handle_output(cmd, options)
   options = options or {}
 
-  last_output = output
   if options.buffer == false then
+    local output = vim.fn.system(cmd)
+    last_output = output
     plain_print(output)
     return
   end
 
   if options.split_cmd ~= nil then
+    local output = vim.fn.system(cmd)
+    last_output = output
     write_to_buffer_legacy(output, options)
     return
   end
 
-  write_to_buffer(output, options) 
+  stream_output(cmd, options)
 end
 
 local function show_last_output(options)
@@ -163,4 +241,5 @@ return {
   handle_output = handle_output,
   reset_output_win = reset_output_win,
   show_last_output = show_last_output,
+  stop_job = stop_job,
 }
