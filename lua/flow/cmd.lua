@@ -100,7 +100,7 @@ end
 local function get_custom_cmds()
   local ls = vim.fn.system(string.format("ls " .. CUSTOM_CMD_FILE, "*"))
   local cmds = {}
-  for s in ls:gmatch("run_code_custom_cmd_(%g+)") do
+  for s in ls:gmatch("run_code_custom_cmd_([^\n]+)") do
     table.insert(cmds, s)
   end
   return cmds
