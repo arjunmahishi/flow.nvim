@@ -18,8 +18,7 @@ local function run(filetype, code)
     return
   end
 
-  local out = vim.fn.system(c)
-  output.handle_output(out, setup_options.output)
+  output.handle_output(c, setup_options.output)
 end
 
 local function handle_md_file(lines)
@@ -66,8 +65,7 @@ local function run_custom_cmd(suffix)
   end
 
   local c = cmd.custom_cmd(suffix)
-  local out = vim.fn.system(c)
-  output.handle_output(out, setup_options.output)
+  output.handle_output(c, setup_options.output)
 end
 
 local function run_last_custom_cmd()
@@ -78,8 +76,7 @@ local function run_last_custom_cmd()
     return
   end
 
-  local out = vim.fn.system(c)
-  output.handle_output(out, setup_options.output)
+  output.handle_output(c, setup_options.output)
 end
 
 local function show_last_output()
