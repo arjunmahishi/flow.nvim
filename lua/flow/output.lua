@@ -180,6 +180,9 @@ local function stream_output(cmd, options)
 
     vim.api.nvim_buf_set_lines(buffer, -1, -1, false, data)
     buf_contents = vim.api.nvim_buf_get_lines(buffer, 0, -1, false)
+    last_output = buf_contents
+
+    -- resize the window to fit the contents
     vim.api.nvim_win_set_config(win, get_output_win_config(buf_contents, options))
 
     -- scroll to the bottom of the buffer
@@ -234,7 +237,11 @@ local function show_last_output(options)
     return
   end
 
-  handle_output(last_output, options)
+  -- this is a quick hack to simply print the last output, by reusing the
+  -- handle_output function
+  last_output_str = table.concat(last_output, "\n")
+  local cmd = "cat <<EOF\n" .. last_output_str .. "\nEOF\n"
+  handle_output(cmd, options)
 end
 
 return {
