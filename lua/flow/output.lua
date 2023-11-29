@@ -205,6 +205,7 @@ local function stream_output(cmd, options)
       end
 
       vim.api.nvim_buf_set_lines(buffer, -1, -1, false, {"[exit code: " .. data .. "]"})
+      vim.api.nvim_buf_set_option(buffer, 'modifiable', options.modifiable or default_modifiable)
     end,
   })
 end
