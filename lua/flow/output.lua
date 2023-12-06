@@ -15,22 +15,20 @@ local last_output = nil
 local job_id = nil
 
 local default_split_cmd = 'vsplit'
-local default_focused = true
 local default_modifiable = false
 local default_buffer_size = "auto"
 
-function stop_job()
+local function stop_job()
   vim.fn.jobstop(job_id)
 end
 
-function get_output_win_config(output_arr, options)
+local function get_output_win_config(output_arr, options)
   local size = options.size or default_buffer_size
   local win_cols = vim.api.nvim_get_option('columns')
   local win_rows = vim.api.nvim_get_option('lines')
   local output_win_config = {
-    relative = 'editor',
-    border = 'double',
-    style = 'minimal',
+    relative = 'editor', border = 'double', style = 'minimal',
+    title = "(running...)", title_pos = 'right',
   }
 
   -- if the size is auto, then calculate the size based on the
@@ -60,43 +58,6 @@ function get_output_win_config(output_arr, options)
   end
 
   return output_win_config
-end
-
-local function write_to_buffer(output, options)
-  output = output:gsub("%s+$", "")
-
-  -- if there is no output, then just print a message and return
-  if output == "" then
-    print("flow: no output to display")
-    return
-  end
-
-  local output_arr = str_split(output, '\n')
-  local current_working_window = vim.api.nvim_get_current_win()
-  
-  -- Create the floating window
-  local win = vim.api.nvim_open_win(0, true, get_output_win_config(output_arr, options))
-
-  -- create buffer
-  local buf = vim.api.nvim_create_buf(false, true)
-
-  -- set buffer
-  vim.api.nvim_win_set_buf(win, buf)
-
-  -- set lines
-  vim.api.nvim_buf_set_lines(buf, 0, -1, true, output_arr)
-
-  -- modifiability
-  vim.api.nvim_buf_set_option(buf, 'modifiable', options.modifiable or default_modifiable)
-
-  -- set keymap to close window when <esc> or <enter> is pressed
-  vim.api.nvim_buf_set_keymap(buf, 'n', '<esc>', ':q<cr>', {noremap = true, silent = true})
-  vim.api.nvim_buf_set_keymap(buf, 'n', '<enter>', ':q<cr>', {noremap = true, silent = true})
-
-  -- if focused is false, then set focus back to the original window
-  if options.focused == false then
-    vim.api.nvim_set_current_win(current_working_window)
-  end
 end
 
 local function write_to_buffer_legacy(output, options)
@@ -138,8 +99,8 @@ end
 
 -- data is the array that the on_stdout/on_stderr callbacks receive
 local function clean_output_data(data)
-  clean_data = {}
-  for i, line in ipairs(data) do
+  local clean_data = {}
+  for _, line in ipairs(data) do
     if line ~= "" then
       table.insert(clean_data, line)
     end
@@ -154,7 +115,7 @@ local function stream_output(cmd, options)
   local win = nil
   local command = { "bash", "-c", cmd }
 
-  output_callback = function(_, data, _)
+  local output_callback = function(_, data, _)
     data = clean_output_data(data)
     if #data == 0 then
       return
@@ -179,7 +140,7 @@ local function stream_output(cmd, options)
     end
 
     vim.api.nvim_buf_set_lines(buffer, -1, -1, false, data)
-    buf_contents = vim.api.nvim_buf_get_lines(buffer, 0, -1, false)
+    local buf_contents = vim.api.nvim_buf_get_lines(buffer, 0, -1, false)
     last_output = buf_contents
 
     -- resize the window to fit the contents
@@ -200,11 +161,11 @@ local function stream_output(cmd, options)
       end
 
       if data == 143 then
-        vim.api.nvim_buf_set_lines(buffer, -1, -1, false, {"[inturrupted by user]"})
+        vim.api.nvim_win_set_config(win, {title = "(inturrupted)", title_pos = 'right'})
         return
       end
 
-      vim.api.nvim_buf_set_lines(buffer, -1, -1, false, {"[exit code: " .. data .. "]"})
+      vim.api.nvim_win_set_config(win, {title = "(exit code: " .. data .. ")", title_pos = 'right'})
       vim.api.nvim_buf_set_option(buffer, 'modifiable', options.modifiable or default_modifiable)
     end,
   })
@@ -240,7 +201,7 @@ local function show_last_output(options)
 
   -- this is a quick hack to simply print the last output, by reusing the
   -- handle_output function
-  last_output_str = table.concat(last_output, "\n")
+  local last_output_str = table.concat(last_output, "\n")
   local cmd = "cat <<EOF\n" .. last_output_str .. "\nEOF\n"
   handle_output(cmd, options)
 end
