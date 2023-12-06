@@ -18,6 +18,12 @@ local default_split_cmd = 'vsplit'
 local default_modifiable = false
 local default_buffer_size = "auto"
 
+local status_pos = 'right'
+local status_running = "(🏃 running...)"
+local status_inturrupted = "(🛑 inturrupted)"
+local status_success = "(✅)"
+local status_failed_exit_code = "(❌ exit code: %d)"
+
 local function stop_job()
   vim.fn.jobstop(job_id)
 end
@@ -28,7 +34,7 @@ local function get_output_win_config(output_arr, options)
   local win_rows = vim.api.nvim_get_option('lines')
   local output_win_config = {
     relative = 'editor', border = 'double', style = 'minimal',
-    title = "(running...)", title_pos = 'right',
+    title = status_running, title_pos = status_pos,
   }
 
   -- if the size is auto, then calculate the size based on the
@@ -154,19 +160,33 @@ local function stream_output(cmd, options)
     on_stdout = output_callback,
     on_stderr = output_callback,
     on_exit = function(_, data, _)
-      vim.api.nvim_buf_set_keymap(buffer, 'n', '<enter>', ':q<cr>', {noremap = true, silent = true})
-
       if buffer == nil then
         return
       end
 
+      vim.api.nvim_buf_set_option(buffer, 'modifiable', options.modifiable or default_modifiable)
+      vim.api.nvim_buf_set_keymap(buffer, 'n', '<enter>', ':q<cr>', {
+        noremap = true, silent = true,
+      })
+
       if data == 143 then
-        vim.api.nvim_win_set_config(win, {title = "(inturrupted)", title_pos = 'right'})
+        vim.api.nvim_win_set_config(win, {
+          title = status_inturrupted, title_pos = status_pos,
+        })
         return
       end
 
-      vim.api.nvim_win_set_config(win, {title = "(exit code: " .. data .. ")", title_pos = 'right'})
-      vim.api.nvim_buf_set_option(buffer, 'modifiable', options.modifiable or default_modifiable)
+      if data == 0 then
+        vim.api.nvim_win_set_config(win, {
+          title = status_success, title_pos = status_pos,
+        })
+        return
+      end
+
+      vim.api.nvim_win_set_config(win, {
+        title = string.format(status_failed_exit_code, data),
+        title_pos = status_pos,
+      })
     end,
   })
 end
