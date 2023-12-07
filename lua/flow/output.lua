@@ -7,11 +7,14 @@
 -- printing in a separate buffer can be more configurable
 
 local str_split = require('flow.util').str_split
+local trim_space = require('flow.util').trim_space
+local mime_type_file_type_map = require('flow.constants').mime_type_file_type_map
 
 local output_buffer_filetype = 'run-code-output'
 local output_win = nil
 local output_buf = nil
 local last_output = nil
+local last_status = nil
 local job_id = nil
 
 local default_split_cmd = 'vsplit'
@@ -23,6 +26,9 @@ local status_running = "(🏃 running...)"
 local status_inturrupted = "(🛑 inturrupted)"
 local status_success = "(✅)"
 local status_failed_exit_code = "(❌ exit code: %d)"
+
+local mime_type_cmd = "file - --mime-type <<EOF\n%s\nEOF"
+local default_file_type = "txt"
 
 local function stop_job()
   vim.fn.jobstop(job_id)
@@ -115,6 +121,19 @@ local function clean_output_data(data)
   return clean_data
 end
 
+local function get_file_type(conts)
+  local mime_type_out = vim.fn.system(string.format(mime_type_cmd, conts))
+
+  local mime_type = trim_space(str_split(mime_type_out, ": ")[2])
+  local file_type = mime_type_file_type_map[mime_type]
+
+  if file_type == nil then
+    return default_file_type
+  end
+
+  return file_type
+end
+
 local function stream_output(cmd, options)
   local win_launched = false
   local buffer = nil
@@ -154,40 +173,51 @@ local function stream_output(cmd, options)
 
     -- scroll to the bottom of the buffer
     vim.api.nvim_win_set_cursor(win, {vim.api.nvim_buf_line_count(buffer), 0})
+
+    -- set the filetype based on the contents of the buffer
+    local buf_contents_str = table.concat(buf_contents, "\n")
+    local file_type = get_file_type(buf_contents_str)
+    vim.api.nvim_buf_set_option(buffer, 'filetype', file_type)
+  end
+
+  local exit_callback = function(_, data, _)
+    if not win_launched then
+      print("flow: Execution completed. But there was no output to display.")
+    end
+
+    if buffer == nil then
+      return
+    end
+
+    vim.api.nvim_buf_set_option(buffer, 'modifiable', options.modifiable or default_modifiable)
+    vim.api.nvim_buf_set_keymap(buffer, 'n', '<enter>', ':q<cr>', {
+      noremap = true, silent = true,
+    })
+
+    if data == 143 then
+      vim.api.nvim_win_set_config(win, {
+        title = status_inturrupted, title_pos = status_pos,
+      })
+      return
+    end
+
+    if data == 0 then
+      vim.api.nvim_win_set_config(win, {
+        title = status_success, title_pos = status_pos,
+      })
+      return
+    end
+
+    vim.api.nvim_win_set_config(win, {
+      title = string.format(status_failed_exit_code, data),
+      title_pos = status_pos,
+    })
   end
 
   job_id = vim.fn.jobstart(command, {
     on_stdout = output_callback,
     on_stderr = output_callback,
-    on_exit = function(_, data, _)
-      if buffer == nil then
-        return
-      end
-
-      vim.api.nvim_buf_set_option(buffer, 'modifiable', options.modifiable or default_modifiable)
-      vim.api.nvim_buf_set_keymap(buffer, 'n', '<enter>', ':q<cr>', {
-        noremap = true, silent = true,
-      })
-
-      if data == 143 then
-        vim.api.nvim_win_set_config(win, {
-          title = status_inturrupted, title_pos = status_pos,
-        })
-        return
-      end
-
-      if data == 0 then
-        vim.api.nvim_win_set_config(win, {
-          title = status_success, title_pos = status_pos,
-        })
-        return
-      end
-
-      vim.api.nvim_win_set_config(win, {
-        title = string.format(status_failed_exit_code, data),
-        title_pos = status_pos,
-      })
-    end,
+    on_exit = exit_callback,
   })
 end
 
