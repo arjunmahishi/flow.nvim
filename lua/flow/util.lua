@@ -29,4 +29,8 @@ M.str_split = function(s, delimiter)
   return result
 end
 
+M.trim_space = function(s)
+  return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
 return M
