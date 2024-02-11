@@ -126,6 +126,18 @@ local function override_cmd_map(cmd_map)
   end
 end
 
+local function override_custom_cmd_dir(dir)
+  if dir == nil then
+    return
+  end
+
+  -- make sure the directory exists
+  vim.fn.system(string.format("mkdir -p %s", dir))
+
+  DATA_DIR = dir
+  CUSTOM_CMD_FILE = dir .. "/" .. "run_code_custom_cmd_%s"
+end
+
 return {
   cmd = cmd,
   custom_cmd = custom_cmd,
@@ -134,5 +146,6 @@ return {
   get_custom_cmds = get_custom_cmds,
   get_last_custom_cmd = get_last_custom_cmd,
   delete_custom_cmd = delete_custom_cmd,
-  override_cmd_map = override_cmd_map
+  override_cmd_map = override_cmd_map,
+  override_custom_cmd_dir = override_custom_cmd_dir,
 }

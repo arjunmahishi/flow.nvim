@@ -14,7 +14,6 @@ local output_buffer_filetype = 'run-code-output'
 local output_win = nil
 local output_buf = nil
 local last_output = nil
-local last_status = nil
 local job_id = nil
 
 local default_split_cmd = 'vsplit'

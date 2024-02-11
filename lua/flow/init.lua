@@ -92,6 +92,7 @@ local function setup(options)
   setup_options = options
 
   cmd.override_cmd_map(options.filetype_cmd_map)
+  cmd.override_custom_cmd_dir(options.custom_cmd_dir)
   sql.configs = options.sql_configs
 end
 
