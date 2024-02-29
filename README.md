@@ -2,6 +2,7 @@
 
 [![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)](https://neovim.io/)
 [![Lua](https://img.shields.io/badge/Lua-blue.svg?style=for-the-badge&logo=lua)](http://www.lua.org)
+![Usage](https://go-badges.vercel.app/api/nvim-plugin-usage?username=arjunmahishi&repo=flow.nvim)
 
 A lightweight neovim plugin to quickly run a snippet of code (in the context of the current file you’re editing) without ever leaving neovim. Gives you a slight boost in productivity by helping you automate parts of your development workflow. Has a pretty cool integration with telescope
 
