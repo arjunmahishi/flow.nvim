@@ -40,6 +40,10 @@ vim.api.nvim_create_user_command('FlowRunMDBlock', function()
   require('flow').run_block()
 end, {})
 
+vim.api.nvim_create_user_command('FlowRunQuickCmd', function()
+  require('flow').run_quick_cmd()
+end, {})
+
 -- Autocommand
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'run-code-output',

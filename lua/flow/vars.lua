@@ -1,9 +1,7 @@
-local function trim_spaces(str)
-  return string.gsub(str, "^%s*(.-)%s*$", "%1")
-end
+local util = require("flow.util")
 
 local function func_pwd()
-  return trim_spaces(vim.fn.system("pwd"))
+  return util.trim_space(vim.fn.system("pwd"))
 end
 
 local function func_curr_file()
@@ -41,13 +39,17 @@ local function add_vars(vars)
   end
 end
 
-local function vars_help_text()
+local function vars_help_text(vars_only)
   local help_text = "# Variables available for use:\n"
   for key, _ in pairs(cmd_variables) do
     help_text = help_text .. string.format("#  - $%s\n", key)
   end
 
-  help_text = help_text .. "#\n# save the changes and press <esc> to close the window\n"
+  if vars_only then
+    return util.trim_space(help_text)
+  end
+
+  help_text = help_text .. "#\n# save the changes and press <esc> to close the window"
   return help_text
 end
 
