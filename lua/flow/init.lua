@@ -3,6 +3,7 @@ local md = require('flow.markdown')
 local cmd = require("flow.cmd")
 local output = require("flow.output")
 local sql = require("flow.sql")
+local windows = require("flow.windows")
 
 local default_setup_options = {
   output = {
@@ -88,6 +89,12 @@ local function reload_plugin()
   print "reloaded flow"
 end
 
+local function run_quick_cmd()
+  windows.open_quick_cmd_window(function(quick_cmd)
+    output.handle_output(quick_cmd, setup_options.output)
+  end)
+end
+
 local function setup(options)
   setup_options = options
 
@@ -102,6 +109,7 @@ return {
   run_file = run_file,
   run_custom_cmd = run_custom_cmd,
   run_last_custom_cmd = run_last_custom_cmd,
+  run_quick_cmd = run_quick_cmd,
   show_last_output = show_last_output,
   reload_plugin = reload_plugin,
   setup = setup

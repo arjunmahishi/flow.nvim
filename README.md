@@ -45,6 +45,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 | `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher) |
 | `:FlowRunLastCmd` | Run the previously executed custom command |
 | `:FlowLastOutput` | Show the output of the last run command |
+| `:FlowRunQuickCmd` | Run a shell command without saving it |
 
 ## Custom commands
 
