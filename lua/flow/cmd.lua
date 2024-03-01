@@ -1,6 +1,6 @@
 local vars = require('flow.vars')
 local sql = require('flow.sql')
-local util = require('flow.util')
+local windows = require('flow.windows')
 
 local DATA_DIR = vim.fn.stdpath("data")
 local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
@@ -26,25 +26,12 @@ local filetype_cmd_map = {
 -- command
 local function set_custom_cmd(suffix)
   if suffix == nil then
-    print("flow: you need to provide an alias for the custom command (example: :RunCodeSetCustomCmd 1)")
+    print("flow: you need to provide an alias for the custom command (example: :FlowSetCustomCmd 1)")
     return
   end
 
   local file_name = string.format(CUSTOM_CMD_FILE, suffix)
-  local is_new_file = not util.file_exists(file_name)
-
-  if is_new_file then
-    local help_text = vars.vars_help_text()
-
-    local file = io.open(file_name, "w")
-    file:write("\n\n" .. help_text)
-    file:close()
-  end
-
-  vim.cmd(custom_command_default_split .. ' ' .. file_name)
-  custom_command_win = vim.api.nvim_get_current_win()
-  custom_command_buf = vim.api.nvim_get_current_buf()
-  vim.bo.filetype = custom_command_filetype
+  windows.open_custom_cmd_window(file_name, custom_command_filetype)
 end
 
 -- callback function that gets triggered when the command is saved

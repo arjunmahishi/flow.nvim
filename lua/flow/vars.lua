@@ -43,10 +43,11 @@ end
 
 local function vars_help_text()
   local help_text = "# Variables available for use:\n"
-  for key, func in pairs(cmd_variables) do
+  for key, _ in pairs(cmd_variables) do
     help_text = help_text .. string.format("#  - $%s\n", key)
   end
 
+  help_text = help_text .. "#\n# save the changes and press <esc> to close the window\n"
   return help_text
 end
 

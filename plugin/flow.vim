@@ -16,9 +16,6 @@ command! FlowRunMDBlock lua require('flow').run_block()
 " trigger reset of output when the output buffer is manually closed
 autocmd FileType run-code-output autocmd BufDelete <buffer> lua require('flow.output').reset_output_win()
 
-" close the custom command window on save
-autocmd BufWritePost,BufLeave,BufDelete *run_code_custom_cmd_* lua require('flow.cmd').close_custom_cmd_win()
-
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
