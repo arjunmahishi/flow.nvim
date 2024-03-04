@@ -4,6 +4,7 @@ local cmd = require("flow.cmd")
 local output = require("flow.output")
 local sql = require("flow.sql")
 local windows = require("flow.windows")
+local vars = require("flow.vars")
 
 local default_setup_options = {
   output = {
@@ -90,8 +91,10 @@ local function reload_plugin()
 end
 
 local function run_quick_cmd()
+  local v = vars.vars_to_export()
   windows.open_quick_cmd_window(function(quick_cmd)
-    output.handle_output(quick_cmd, setup_options.output)
+    local cmd_with_vars = v .. "; " .. quick_cmd
+    output.handle_output(cmd_with_vars, setup_options.output)
   end)
 end
 
