@@ -66,7 +66,7 @@ local function cmd(lang, code)
     return nil
   end
 
-  return string.format(cmd_tmpl, code)
+  return vars.vars_to_export() .. "; " .. string.format(cmd_tmpl, code)
 end
 
 local function custom_cmd(suffix)
