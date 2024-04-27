@@ -1,6 +1,9 @@
 local util = require('flow.util')
 local vars = require('flow.vars')
 
+local QUICK_HISTORY_FILE = vim.fn.stdpath("data") .. "/flow_nvim_quick_cmd_history"
+local MAX_HISTORY_SIZE = 100
+
 local function open_custom_cmd_window(file_name, file_type)
   local win_cols = vim.api.nvim_get_option('columns')
   local win_rows = vim.api.nvim_get_option('lines')
@@ -65,6 +68,7 @@ local function open_quick_cmd_window(callback)
   local height = #help_text
   local col = math.floor((win_cols - width) / 2)
   local row = math.floor((win_rows - height) / 2)
+  local history = util.file_to_table(QUICK_HISTORY_FILE)
 
   local output_win_config = {
     relative = 'editor', border = 'double', style = 'minimal',
@@ -90,6 +94,16 @@ local function open_quick_cmd_window(callback)
       callback(text)
     end
 
+    -- store the command in history
+    table.insert(history, text)
+    history = util.dedup(history)
+
+    if #history > MAX_HISTORY_SIZE then
+      -- take the last MAX_HISTORY_SIZE elements
+      history = util.tail_n(history, MAX_HISTORY_SIZE)
+    end
+
+    util.table_to_file(history, QUICK_HISTORY_FILE)
     vim.api.nvim_buf_delete(buffer, {force = false})
   end
 
@@ -109,6 +123,30 @@ local function open_quick_cmd_window(callback)
       )
 
       handle_enter()
+    end
+  })
+
+  -- navigate history
+  local history_index = #history + 1
+  vim.api.nvim_buf_set_keymap(buffer, "i", "<c-p>", "", {
+    callback = function ()
+      if history_index == 1 then
+        return
+      end
+
+      history_index = history_index - 1
+      vim.api.nvim_buf_set_lines(buffer, 0, -1, false, util.str_split(history[history_index], "\n"))
+    end
+  })
+
+  vim.api.nvim_buf_set_keymap(buffer, "i", "<c-n>", "", {
+    callback = function ()
+      if history_index == #history then
+        return
+      end
+
+      history_index = history_index + 1
+      vim.api.nvim_buf_set_lines(buffer, 0, -1, false, util.str_split(history[history_index], "\n"))
     end
   })
 end
