@@ -22,16 +22,20 @@ A lightweight neovim plugin to quickly run a snippet of code (in the context of 
 
 <!-- tocstop -->
 
-## Demo
-
-It's hard to do justice to this plugin by explaining what it does, in text form. [**Watch the demo here**](https://www.youtube.com/watch?v=GE5E1ZhV_Ok).
-
 ## Installation
 
 Use you favorite plugin manager. If you use vim-plug, add this to your `init.vim` / `init.lua`
 
 ```vim
 Plug 'arjunmahishi/flow.nvim'
+
+```
+
+If you have `telescope.nvim` installed, you can add the following line to your
+`init.vim` / `init.lua` to enable the telescope extension.
+
+```vim
+require('telescope').load_extension('flow')
 ```
 
 ## Usage
@@ -42,7 +46,7 @@ This is still a work in progress. So, PRs are welcome and appreciated. As of now
 |---------|-------------|
 | `:FlowRunSelected` | Run code that is visually selected |
 | `:FlowRunFile` | Run the entire file |
-| `:FlowLauncher` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher) |
+| `:FlowLauncher` or `:Telescope flow [opts]` | Launches a [telescope](https://github.com/nvim-telescope/telescope.nvim) interface to manage custom commands. Read the docs [here](https://github.com/arjunmahishi/flow.nvim/wiki/Flow-launcher) |
 | `:FlowRunLastCmd` | Run the previously executed custom command |
 | `:FlowLastOutput` | Show the output of the last run command |
 | `:FlowRunQuickCmd` | Run a shell command without saving it. This command maintains a history of previous commands. Navigate the history using `<c-p>` and `<c-n>` |
@@ -185,6 +189,10 @@ nmap <leader>rt :FlowLauncher<CR>
 nmap <leader>rp :FlowRunLastCmd<CR>
 nmap <leader>ro :FlowLastOutput<CR>
 ```
+
+## Demo
+
+It's hard to do justice to this plugin by explaining what it does, in text form. [**Watch the demo here**](https://www.youtube.com/watch?v=GE5E1ZhV_Ok).
 
 ---
 

@@ -21,7 +21,7 @@ vim.api.nvim_create_user_command('FlowReload', function()
 end, {})
 
 vim.api.nvim_create_user_command('FlowRunSelected', function(opts)
-  require('flow').run_range({opts.line1, opts.line2})
+  require('flow').run_range({ opts.line1, opts.line2 })
 end, { nargs = '*', range = true })
 
 vim.api.nvim_create_user_command('FlowLauncher', function()
