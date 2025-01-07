@@ -3,13 +3,15 @@ local sql = require('flow.sql')
 local windows = require('flow.windows')
 
 local DATA_DIR = vim.fn.stdpath("data")
-local CUSTOM_CMD_FILE = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
 
 local custom_command_filetype = 'bash'
-local custom_command_default_split = '10split'
 local custom_command_win = nil
 local custom_command_buf = nil
 local last_custom_cmd = nil
+
+-- this template is imported in the telescope.lua file. That's why it's not
+-- defined as a local variable
+CUSTOM_CMD_FILE_NAME_TMPL = DATA_DIR .. "/" .. "run_code_custom_cmd_%s"
 
 local filetype_cmd_map = {
   lua = "lua <<-EOF\n%s\nEOF",
@@ -30,7 +32,7 @@ local function set_custom_cmd(suffix)
     return
   end
 
-  local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  local file_name = string.format(CUSTOM_CMD_FILE_NAME_TMPL, suffix)
   windows.open_custom_cmd_window(file_name, custom_command_filetype)
 end
 
@@ -70,7 +72,7 @@ local function cmd(lang, code)
 end
 
 local function custom_cmd(suffix)
-  local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  local file_name = string.format(CUSTOM_CMD_FILE_NAME_TMPL, suffix)
   local custom_cmd_file = io.open(file_name, "r")
   local cmd_str = ""
 
@@ -85,7 +87,7 @@ local function custom_cmd(suffix)
 end
 
 local function get_custom_cmds()
-  local ls = vim.fn.system(string.format("ls " .. CUSTOM_CMD_FILE, "*"))
+  local ls = vim.fn.system(string.format("ls " .. CUSTOM_CMD_FILE_NAME_TMPL, "*"))
   local cmds = {}
   for s in ls:gmatch("run_code_custom_cmd_([^\n]+)") do
     table.insert(cmds, s)
@@ -94,7 +96,7 @@ local function get_custom_cmds()
 end
 
 local function delete_custom_cmd(suffix)
-  local file_name = string.format(CUSTOM_CMD_FILE, suffix)
+  local file_name = string.format(CUSTOM_CMD_FILE_NAME_TMPL, suffix)
   os.remove(file_name)
   print(string.format("flow: deleted custom command '%s'", suffix))
 end
@@ -122,7 +124,7 @@ local function override_custom_cmd_dir(dir)
   vim.fn.system(string.format("mkdir -p %s", dir))
 
   DATA_DIR = dir
-  CUSTOM_CMD_FILE = dir .. "/" .. "run_code_custom_cmd_%s"
+  CUSTOM_CMD_FILE_NAME_TMPL = dir .. "/" .. "run_code_custom_cmd_%s"
 end
 
 return {

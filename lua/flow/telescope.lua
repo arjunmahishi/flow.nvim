@@ -13,8 +13,16 @@ local function custom_cmds()
     pickers.new(opts, {
       prompt_title = "Custom commands",
       finder = finders.new_table {
-        results = custom_cmd_list
+        results = custom_cmd_list,
+        entry_maker = function(entry)
+          return {
+            value = string.format(CUSTOM_CMD_FILE_NAME_TMPL, entry),
+            display = entry,
+            ordinal = entry,
+          }
+        end
       },
+      previewer = conf.file_previewer(opts),
       sorter = conf.generic_sorter(opts),
       attach_mappings = function(prompt_bufnr, map)
         actions.select_default:replace(function()
@@ -24,7 +32,7 @@ local function custom_cmds()
           -- if an existing command is selected, it should be executed. Else, a
           -- new command sould be created with that name
           if selection ~= nil then
-            run_custom_cmd(selection[1])
+            run_custom_cmd(selection.ordinal)
             return
           end
 
@@ -34,13 +42,13 @@ local function custom_cmds()
         map("i", "<c-e>", function()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
-          cmd.set_custom_cmd(selection[1])
+          cmd.set_custom_cmd(selection.ordinal)
         end)
 
         map("i", "<c-d>", function()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
-          cmd.delete_custom_cmd(selection[1])
+          cmd.delete_custom_cmd(selection.ordinal)
         end)
         return true
       end,
