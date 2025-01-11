@@ -49,6 +49,7 @@ local function custom_cmds()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           cmd.delete_custom_cmd(selection.ordinal)
+          custom_cmds()(opts)
         end)
         return true
       end,
